@@ -1,0 +1,35 @@
+<instance format="XCSP3" type="CSP">
+  <variables>
+    <array id="positionMasques" note="========================== Variables de la solution =====================================================" size="[4]"> 0..3 </array>
+    <array id="rotationMasques" size="[4]"> 0..3 </array>
+    <array id="monstresVisibles" note="======================= Contraintes ======================= - Correspond aux monstres ce qu'on voit" size="[4][3][3]"> 0..4 </array>
+  </variables>
+  <constraints>
+    <count note="Objectif">
+      <list> monstresVisibles[][][] </list>
+      <values> 1 </values>
+      <condition> (eq,25) </condition>
+    </count>
+    <count>
+      <list> monstresVisibles[][][] </list>
+      <values> 1 </values>
+      <condition> (eq,2) </condition>
+    </count>
+    <count>
+      <list> monstresVisibles[][][] </list>
+      <values> 1 </values>
+      <condition> (eq,1) </condition>
+    </count>
+    <count>
+      <list> monstresVisibles[][][] </list>
+      <values> 1 </values>
+      <condition> (eq,0) </condition>
+    </count>
+    <count>
+      <list> monstresVisibles[][][] </list>
+      <values> 1 </values>
+      <condition> (eq,0) </condition>
+    </count>
+    <allDifferent> positionMasques[] </allDifferent>
+  </constraints>
+</instance>

@@ -1,5 +1,4 @@
 from pycsp3 import *
-from pyscipopt import Model
 
 
 
@@ -76,35 +75,33 @@ def constructModel():
 
     #============================================= Envoi au modèle ===============================================
 
-    #Création du modèle
-    model = Model("Exemple")
-    #model.printStatistics()
 
 
 
     #======================= Contraintes =======================
     #Correspond aux monstres ce qu'on voit
     monstresVisibles = VarArray(size=[4,3,3], dom=range(nbCategoriesDeMonstres+1))
-    monstresComptesSurLaCarte = VarArray(size=[nbCategoriesDeMonstres+1])
     #print(monstresComptesSurLaCarte[0], " - ", nombreMontresObjectif[0])
 
     #La position des masques doivent être différentes
     satisfy(
-        #Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMontresObjectif[0]*
+        #Objectif des monstres doivent être bons
+        *[Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(nbCategoriesDeMonstres+1)],
+        #Position des masques différents
         AllDifferent(positionMasques)
     )
 
+    if solve() is SAT:
+        print("Fait")
+
     #On va compter les monstres
 
-    return locals()
 
 
-#Affiche le résultat sous forme 2D
-def printSolution(model):
-    pass
+
+
 
 
 
 if __name__ == "__main__":
-    model = constructModel()
-    #print(model)
+    constructModel()

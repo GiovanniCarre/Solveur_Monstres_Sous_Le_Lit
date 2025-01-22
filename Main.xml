@@ -4,4 +4,7 @@
     <array id="rotationMasques" size="[4]"> 0..3 </array>
     <array id="monstresVisibles" note="======================= Contraintes ======================= - Correspond aux monstres ce qu'on voit" size="[4][3][3]"> 0..4 </array>
   </variables>
+  <constraints>
+    <allDifferent note="Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMontresObjectif[0]*"> positionMasques[] </allDifferent>
+  </constraints>
 </instance>
