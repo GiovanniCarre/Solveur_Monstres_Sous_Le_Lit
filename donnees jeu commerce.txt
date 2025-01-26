@@ -1,0 +1,72 @@
+CHAMBRES
+
+chambre 1:
+
+vide    champi      dino
+yeti    vide        chauvesouris
+jaune   vide        vide
+
+chambre 2 :
+
+champi  rose        vide
+vide    yeti        chauvesouris
+jaune   singe       vide
+
+chambre 3 :
+
+champi  dino            singe
+yeti    chauvesouris    vide
+singe   rose            doudou
+
+chambre 4 :
+
+vide    vide            vide
+rose    champi          doudou
+yeti    singe           chauvesouris
+
+
+vide(0) champi(1) dino(2) yeti(3) chauvesouris(4) jaune(5) rose(6) singe(7) doudou(8)
+
+0 1 2
+3 0 4
+5 0 0
+
+1 6 0
+0 3 4
+5 7 0
+
+1 2 7
+3 4 0
+7 6 8
+
+0 0 0
+6 1 8
+3 7 4
+
+___________________________________________________________________________________
+MASQUES:
+
+0 1 0
+0 0 0
+0 1 0
+
+0 0 1
+0 0 0
+1 0 0
+
+0 1 0
+0 1 0
+0 0 0
+
+0 0 1
+0 0 0
+0 1 0
+
+___________________________________________________________________________________
+SOLUTIONS :
+solution sans tourner ni déplacer : (monstres = 1, 5, 2, 4, 7) : [0, 1, 1, 0, 1, 1, 0, 1, 0]
+
+___________________________________________________________________________________
+PROBLEMES :
+
+(facile) 3 singes + 2 yetis = [0, 0, 0, 2, 0, 0, 0, 3, 0]
