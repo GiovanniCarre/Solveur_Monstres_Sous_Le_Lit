@@ -1,3 +1,5 @@
+from pydoc import describe
+
 from pycsp3 import *
 
 def countZeros(tableau):
@@ -82,6 +84,17 @@ def fonctionDeDorian(objectif):
     objectif[0] = nMasquesOrginauxFixes + objectif[0]
     print("Nombre de cases vides: ", objectif[0])
 
+def afficherSolution(sol):
+    #print(sol)
+    for i in range(4):
+        description = "Le masque " + str(i) + " est placé sur la chambre " + str(sol[i]["position"]) + " et est de la forme :"
+        for j in range(9):
+            if (j%3==0) :
+                description+="\n"
+            description+= str(sol[i]["rotations"][j])+", "
+        description = description[:-2]
+        print(description)
+
 if __name__ == "__main__":
     nbCategoriesDeMonstres = 7
     chambres = creerChambres()
@@ -106,7 +119,27 @@ if __name__ == "__main__":
         (Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     )
 
-    if solve() is SAT:
-        print("SAT")
-    else :
-        print("UNSAT")
+    solutions = []
+    nSolutionsTrouves = 0
+    maxSolutions = 3
+    while solve() is SAT and nSolutionsTrouves < maxSolutions:
+        nSolutionsTrouves += 1
+        solution = []
+        for i in range(4):
+            masque = {}
+            masque["position"]=i
+            masque["rotations"] = []
+            for j in range(9):
+                masque["rotations"].append(value(monstresVisibles[i][j]))
+            solution.append(masque)
+        if (solution in solutions) :
+            print("SAT, solution déjà trouvée")
+        else :
+            print("SAT")
+            solutions.append(solution)
+
+    print("\n--- AFFICHAGE DES SOLUTIONS ---")
+    for i, sol in enumerate(solutions) :
+        print("Solution "+str(i)+" : ")
+        afficherSolution(sol)
+        print("\n")
