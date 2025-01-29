@@ -3,31 +3,64 @@
     <array id="positionMasques" note="========================== Variables de la solution =====================================================" size="[4]"> 0..3 </array>
     <array id="rotationMasques" size="[4]"> 0..3 </array>
     <array id="monstresVisibles" note="======================= Contraintes ======================= - Correspond aux monstres ce qu'on voit" size="[4][3][3]"> 0..4 </array>
+    <array id="masquesPlacesTournes" size="[4][3][3]"> 0 1 </array>
   </variables>
   <constraints>
-    <count note="Objectif">
+    <instantiation>
+      <list> monstresVisibles[0][0][0] monstresVisibles[0][1..2][1] monstresVisibles[0][2][2] monstresVisibles[1][0][2] monstresVisibles[1][1][0] monstresVisibles[1][2][2] monstresVisibles[2][1][2] monstresVisibles[3][0][] </list>
+      <values> 0x11 </values>
+    </instantiation>
+    <group>
+      <intension> eq(%0,mul(%1,%2)) </intension>
+      <args> monstresVisibles[0][0][1] 1 masquesPlacesTournes[0][0][1] </args>
+      <args> monstresVisibles[0][0][2] 2 masquesPlacesTournes[0][0][2] </args>
+      <args> monstresVisibles[0][1][0] 3 masquesPlacesTournes[0][1][0] </args>
+      <args> monstresVisibles[0][1][2] 4 masquesPlacesTournes[0][1][2] </args>
+      <args> monstresVisibles[0][2][0] 5 masquesPlacesTournes[0][2][0] </args>
+      <args> monstresVisibles[1][0][0] 1 masquesPlacesTournes[1][0][0] </args>
+      <args> monstresVisibles[1][0][1] 6 masquesPlacesTournes[1][0][1] </args>
+      <args> monstresVisibles[1][1][1] 3 masquesPlacesTournes[1][1][1] </args>
+      <args> monstresVisibles[1][1][2] 4 masquesPlacesTournes[1][1][2] </args>
+      <args> monstresVisibles[1][2][0] 5 masquesPlacesTournes[1][2][0] </args>
+      <args> monstresVisibles[1][2][1] 7 masquesPlacesTournes[1][2][1] </args>
+      <args> monstresVisibles[2][0][0] 1 masquesPlacesTournes[2][0][0] </args>
+      <args> monstresVisibles[2][0][1] 2 masquesPlacesTournes[2][0][1] </args>
+      <args> monstresVisibles[2][0][2] 7 masquesPlacesTournes[2][0][2] </args>
+      <args> monstresVisibles[2][1][0] 3 masquesPlacesTournes[2][1][0] </args>
+      <args> monstresVisibles[2][1][1] 4 masquesPlacesTournes[2][1][1] </args>
+      <args> monstresVisibles[2][2][0] 7 masquesPlacesTournes[2][2][0] </args>
+      <args> monstresVisibles[2][2][1] 6 masquesPlacesTournes[2][2][1] </args>
+      <args> monstresVisibles[2][2][2] 8 masquesPlacesTournes[2][2][2] </args>
+      <args> monstresVisibles[3][1][0] 6 masquesPlacesTournes[3][1][0] </args>
+      <args> monstresVisibles[3][1][1] 1 masquesPlacesTournes[3][1][1] </args>
+      <args> monstresVisibles[3][1][2] 8 masquesPlacesTournes[3][1][2] </args>
+      <args> monstresVisibles[3][2][0] 3 masquesPlacesTournes[3][2][0] </args>
+      <args> monstresVisibles[3][2][1] 7 masquesPlacesTournes[3][2][1] </args>
+      <args> monstresVisibles[3][2][2] 4 masquesPlacesTournes[3][2][2] </args>
+    </group>
+    <count note="Objectif des monstres doivent être bons">
       <list> monstresVisibles[][][] </list>
-      <values> 1 </values>
-      <condition> (eq,25) </condition>
+      <values> 0 </values>
+      <condition> (eq,5) </condition>
     </count>
-    <count>
+    <count note="Position des masques différents">
       <list> monstresVisibles[][][] </list>
       <values> 1 </values>
       <condition> (eq,2) </condition>
     </count>
     <count>
       <list> monstresVisibles[][][] </list>
-      <values> 1 </values>
+      <values> 2 </values>
       <condition> (eq,1) </condition>
     </count>
     <count>
       <list> monstresVisibles[][][] </list>
-      <values> 1 </values>
+      <values> 3 </values>
       <condition> (eq,0) </condition>
     </count>
     <count>
       <list> monstresVisibles[][][] </list>
-      <values> 1 </values>
+      <values> 4 </values>
       <condition> (eq,0) </condition>
     </count>
     <allDifferent> positionMasques[] </allDifferent>

@@ -1,0 +1,22 @@
+<instance format="XCSP3" type="CSP">
+  <variables>
+    <array id="positionMasques" size="[4]"> 0..3 </array>
+    <array id="rotationMasques" size="[4]"> 0..3 </array>
+    <array id="masquesPlaces" size="[4][3][3]"> 0 1 </array>
+    <array id="masquesPlacesTournes" size="[4][3][3]"> 0 1 </array>
+    <array id="monstresVisibles" size="[4][3][3]"> 1..4 </array>
+  </variables>
+  <constraints>
+    <group>
+      <count>
+        <list> monstresVisibles[][][] </list>
+        <values> %0 </values>
+        <condition> (eq,%1) </condition>
+      </count>
+      <args> 1 2 </args>
+      <args> 2 1 </args>
+      <args> 3 0 </args>
+      <args> 4 0 </args>
+    </group>
+  </constraints>
+</instance>
