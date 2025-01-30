@@ -74,6 +74,20 @@ def afficherSolution(sol):
             description+= str(sol[i][j])+", "
         description = description[:-2]
         print(description)
+    print("\n")
+
+def afficherDefi(defi) :
+    description = ""
+    for i in range(1,len(defi)) :
+        description += str(defi[i])+", "
+    print(description[:-2])
+
+def defiRealisable(defi):
+    unpost()
+    satisfy(monstresVisiblesCategorie[i] == defi[i] for i in range(1, nbCategoriesDeMonstres + 1))
+    if solve(sols=ALL) is SAT :
+        return (n_solutions() == 1)
+    return False
 
 if __name__ == "__main__":
     nbCategoriesDeMonstres = 7
@@ -86,25 +100,53 @@ if __name__ == "__main__":
     masquesSelectionnes = VarArray(size=[4,10], dom=range(5))
     selectionMasques = VarArray(size=4, dom=range(nMasques))
     monstresVisibles = VarArray(size=[4,9], dom=range(nbCategoriesDeMonstres+1))
+    monstresVisiblesCategorie = VarArray(size = nbCategoriesDeMonstres+1, dom=range(36))
     satisfy(
         (masquesVar[i] == masques[i] for i in range(nMasques)),
         (masquesSelectionnes[i] == masquesVar[selectionMasques[i]] for i in range(4)),
         (AllDifferent([masquesSelectionnes[i][9] for i in range(4)])),
         (monstresVisibles[i][j] == chambres[i][j]*masquesSelectionnes[i][j] for i in range(4) for j in range(9)),
-        (Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
+        (Count(monstresVisibles, value=i) == monstresVisiblesCategorie[i] for i in range(1, nbCategoriesDeMonstres + 1))
     )
-
+    solutions = []
+    defis = []
     if solve(sols=ALL) is SAT and n_solutions():
-        solution = []
-        print("SAT avec ", n_solutions(), " solutions")
+        #print("SAT avec ", n_solutions(), " solutions")
         for k in range(n_solutions()):
+            solution = []
             for i in range(4):
                 chambre = []
                 for j in range(10):
                     chambre.append(value(masquesSelectionnes[i][j], sol=k))
                 solution.append(chambre)
-            print("\n--- AFFICHAGE DE LA SOLUTION "+str(k)+" ---")
-            afficherSolution(solution)
-            print("\n")
-    else :
-        print("UNSAT")
+            solutions.append(solution)
+            defi = []
+            for i in range(nbCategoriesDeMonstres+1) :
+                defi.append(value(monstresVisiblesCategorie[i], sol=k))
+            defis.append(defi)
+
+    satisfy(monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
+    nonRealisables = 0
+    nbMax = 3
+    defisRealisable = []
+    for i, defi in enumerate(defis):
+        if i > nbMax:
+            break
+        if defiRealisable(defi):
+            defisRealisable.append(defi)
+            #afficherDefi(defi)
+            #afficherSolution(solution)
+        else :
+            nonRealisables += 1
+            #afficherDefi(defis[i])
+            #afficherSolution(solution)*
+
+    print("[")
+    for i in range(len(defisRealisable)):
+        print("[")
+        afficherDefi(defisRealisable[i])
+        if i >= len(defisRealisable)-1:
+            print("]")
+        else:
+            print("],")
+    print("]")

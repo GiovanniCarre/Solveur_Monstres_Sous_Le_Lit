@@ -72,7 +72,10 @@ def afficherSolution(sol):
         for j in range(9):
             description+= str(sol[i][j])+", "
         description = description[:-2]
-        print(description+"],")
+        if (i == 3):
+            print(description+"]")
+        else:
+            print(description+"],")
     print("]")
 if __name__ == "__main__":
     nbCategoriesDeMonstres = 7

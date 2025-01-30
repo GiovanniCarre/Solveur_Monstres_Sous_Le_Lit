@@ -5,15 +5,15 @@
 <template>
   <div class="conteneur_boutons">
     <button>
-      <router-link to="/GeneratePuzzle">Générer un puzzle</router-link>
+      <router-link to="/generate-puzzle">Générer un puzzle</router-link>
     </button>
 
     <button>
-      Résoudre un puzzle
+      <router-link to="/solve-puzzle">Tester un défi</router-link>
     </button>
 
     <button>
-      Modifier le jeu
+      <router-link to="/modify-game">Modifier le jeu</router-link>
     </button>
   </div>
 

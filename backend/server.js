@@ -2,7 +2,10 @@ const express = require('express');
 const { exec } = require('child_process');
 const app = express();
 const port = 3000;
+const cors = require('cors');
 
+
+app.use(cors());
 // Middleware pour gérer les réponses JSON
 app.use(express.json());
 
@@ -64,6 +67,7 @@ app.get('/generateNewGame', (req, res) => {
         }
         try {
             const result = JSON.parse(stdout);
+            console.log(result)
             res.json(result);  // Envoie le résultat au client
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', e);
@@ -85,10 +89,7 @@ app.get('/solveGame', (req, res) => {
             console.error(`Erreur de script: ${stderr}`);
             return res.status(500).json({ error: stderr });
         }
-        // Le script Python renvoie un JSON ou un texte que l'on parse
         try {
-            // Afficher stdout pour déboguer
-            console.log(stdout);
 
             // Nettoyage : enlever les retours à la ligne et espaces
             let cleanedStdout = stdout.trim();
@@ -101,7 +102,6 @@ app.get('/solveGame', (req, res) => {
                 return res.status(500).json({ error: 'La sortie n\'est pas au format JSON attendu.' });
             }
 
-            // Maintenant on essaye de parser le JSON
             const result = JSON.parse(cleanedStdout);
 
             // Vérification du type de résultat et de son format
