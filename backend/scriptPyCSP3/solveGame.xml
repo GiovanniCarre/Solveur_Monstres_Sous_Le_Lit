@@ -1,0 +1,150 @@
+<instance format="XCSP3" type="CSP">
+  <variables>
+    <array id="masquesVar" size="[12][10]"> 0..4 </array>
+    <array id="masquesSelectionnes" size="[4][10]"> 0..4 </array>
+    <array id="selectionMasques" size="[4]"> 0..11 </array>
+    <array id="monstresVisibles" size="[4][9]"> 0..7 </array>
+  </variables>
+  <constraints>
+    <group>
+      <instantiation>
+        <list> %0 %1 %2 %3 %4 %5 %6 %7 %8 %9 </list>
+        <values> %... </values>
+      </instantiation>
+      <args> masquesVar[0][] 0 1 0 0 0 0 0 1 0 0 </args>
+      <args> masquesVar[1][] 0 0 0 1 0 1 0 0 0 0 </args>
+      <args> masquesVar[2][] 0 0 1 0 0 0 1 0 0 1 </args>
+      <args> masquesVar[3][] 1 0 0 0 0 0 0 0 1 1 </args>
+      <args> masquesVar[4][] 0 1 0 0 1 0 0 0 0 2 </args>
+      <args> masquesVar[5][] 0 0 0 0 1 1 0 0 0 2 </args>
+      <args> masquesVar[6][] 0 0 0 0 1 0 0 1 0 2 </args>
+      <args> masquesVar[7][] 0 0 0 1 1 0 0 0 0 2 </args>
+      <args> masquesVar[8][] 0 0 1 0 0 0 0 1 0 3 </args>
+      <args> masquesVar[9][] 0 0 0 1 0 0 0 0 1 3 </args>
+      <args> masquesVar[10][] 0 1 0 0 0 0 1 0 0 3 </args>
+      <args> masquesVar[11][] 1 0 0 0 0 1 0 0 0 3 </args>
+    </group>
+    <group>
+      <element>
+        <list> %... </list>
+        <index> selectionMasques[0] </index>
+        <value> %0 </value>
+      </element>
+      <args> masquesSelectionnes[0][0] masquesVar[][0] </args>
+      <args> masquesSelectionnes[0][1] masquesVar[][1] </args>
+      <args> masquesSelectionnes[0][2] masquesVar[][2] </args>
+      <args> masquesSelectionnes[0][3] masquesVar[][3] </args>
+      <args> masquesSelectionnes[0][4] masquesVar[][4] </args>
+      <args> masquesSelectionnes[0][5] masquesVar[][5] </args>
+      <args> masquesSelectionnes[0][6] masquesVar[][6] </args>
+      <args> masquesSelectionnes[0][7] masquesVar[][7] </args>
+      <args> masquesSelectionnes[0][8] masquesVar[][8] </args>
+      <args> masquesSelectionnes[0][9] masquesVar[][9] </args>
+    </group>
+    <group>
+      <element>
+        <list> %... </list>
+        <index> selectionMasques[1] </index>
+        <value> %0 </value>
+      </element>
+      <args> masquesSelectionnes[1][0] masquesVar[][0] </args>
+      <args> masquesSelectionnes[1][1] masquesVar[][1] </args>
+      <args> masquesSelectionnes[1][2] masquesVar[][2] </args>
+      <args> masquesSelectionnes[1][3] masquesVar[][3] </args>
+      <args> masquesSelectionnes[1][4] masquesVar[][4] </args>
+      <args> masquesSelectionnes[1][5] masquesVar[][5] </args>
+      <args> masquesSelectionnes[1][6] masquesVar[][6] </args>
+      <args> masquesSelectionnes[1][7] masquesVar[][7] </args>
+      <args> masquesSelectionnes[1][8] masquesVar[][8] </args>
+      <args> masquesSelectionnes[1][9] masquesVar[][9] </args>
+    </group>
+    <group>
+      <element>
+        <list> %... </list>
+        <index> selectionMasques[2] </index>
+        <value> %0 </value>
+      </element>
+      <args> masquesSelectionnes[2][0] masquesVar[][0] </args>
+      <args> masquesSelectionnes[2][1] masquesVar[][1] </args>
+      <args> masquesSelectionnes[2][2] masquesVar[][2] </args>
+      <args> masquesSelectionnes[2][3] masquesVar[][3] </args>
+      <args> masquesSelectionnes[2][4] masquesVar[][4] </args>
+      <args> masquesSelectionnes[2][5] masquesVar[][5] </args>
+      <args> masquesSelectionnes[2][6] masquesVar[][6] </args>
+      <args> masquesSelectionnes[2][7] masquesVar[][7] </args>
+      <args> masquesSelectionnes[2][8] masquesVar[][8] </args>
+      <args> masquesSelectionnes[2][9] masquesVar[][9] </args>
+    </group>
+    <group>
+      <element>
+        <list> %... </list>
+        <index> selectionMasques[3] </index>
+        <value> %0 </value>
+      </element>
+      <args> masquesSelectionnes[3][0] masquesVar[][0] </args>
+      <args> masquesSelectionnes[3][1] masquesVar[][1] </args>
+      <args> masquesSelectionnes[3][2] masquesVar[][2] </args>
+      <args> masquesSelectionnes[3][3] masquesVar[][3] </args>
+      <args> masquesSelectionnes[3][4] masquesVar[][4] </args>
+      <args> masquesSelectionnes[3][5] masquesVar[][5] </args>
+      <args> masquesSelectionnes[3][6] masquesVar[][6] </args>
+      <args> masquesSelectionnes[3][7] masquesVar[][7] </args>
+      <args> masquesSelectionnes[3][8] masquesVar[][8] </args>
+      <args> masquesSelectionnes[3][9] masquesVar[][9] </args>
+    </group>
+    <allDifferent> masquesSelectionnes[][9] </allDifferent>
+    <instantiation>
+      <list> monstresVisibles[0][0] monstresVisibles[0][4] monstresVisibles[0][7..8] monstresVisibles[1][2..3] monstresVisibles[1][8] monstresVisibles[2][5] monstresVisibles[3][0..2] </list>
+      <values> 0x11 </values>
+    </instantiation>
+    <group>
+      <intension> eq(%0,mul(%1,%2)) </intension>
+      <args> monstresVisibles[0][1] 1 masquesSelectionnes[0][1] </args>
+      <args> monstresVisibles[0][2] 2 masquesSelectionnes[0][2] </args>
+      <args> monstresVisibles[0][3] 3 masquesSelectionnes[0][3] </args>
+      <args> monstresVisibles[0][5] 4 masquesSelectionnes[0][5] </args>
+      <args> monstresVisibles[0][6] 5 masquesSelectionnes[0][6] </args>
+      <args> monstresVisibles[1][0] 1 masquesSelectionnes[1][0] </args>
+      <args> monstresVisibles[1][1] 6 masquesSelectionnes[1][1] </args>
+      <args> monstresVisibles[1][4] 3 masquesSelectionnes[1][4] </args>
+      <args> monstresVisibles[1][5] 4 masquesSelectionnes[1][5] </args>
+      <args> monstresVisibles[1][6] 5 masquesSelectionnes[1][6] </args>
+      <args> monstresVisibles[1][7] 7 masquesSelectionnes[1][7] </args>
+      <args> monstresVisibles[2][0] 1 masquesSelectionnes[2][0] </args>
+      <args> monstresVisibles[2][1] 2 masquesSelectionnes[2][1] </args>
+      <args> monstresVisibles[2][2] 7 masquesSelectionnes[2][2] </args>
+      <args> monstresVisibles[2][3] 3 masquesSelectionnes[2][3] </args>
+      <args> monstresVisibles[2][4] 4 masquesSelectionnes[2][4] </args>
+      <args> monstresVisibles[2][6] 7 masquesSelectionnes[2][6] </args>
+      <args> monstresVisibles[2][7] 6 masquesSelectionnes[2][7] </args>
+      <args> monstresVisibles[2][8] 8 masquesSelectionnes[2][8] </args>
+      <args> monstresVisibles[3][3] 6 masquesSelectionnes[3][3] </args>
+      <args> monstresVisibles[3][4] 1 masquesSelectionnes[3][4] </args>
+      <args> monstresVisibles[3][5] 8 masquesSelectionnes[3][5] </args>
+      <args> monstresVisibles[3][6] 3 masquesSelectionnes[3][6] </args>
+      <args> monstresVisibles[3][7] 7 masquesSelectionnes[3][7] </args>
+      <args> monstresVisibles[3][8] 4 masquesSelectionnes[3][8] </args>
+    </group>
+    <group>
+      <count>
+        <list> monstresVisibles[][] </list>
+        <values> %0 </values>
+        <condition> (eq,0) </condition>
+      </count>
+      <args> 1 </args>
+      <args> 2 </args>
+      <args> 4 </args>
+      <args> 5 </args>
+      <args> 6 </args>
+    </group>
+    <group>
+      <count>
+        <list> monstresVisibles[][] </list>
+        <values> %0 </values>
+        <condition> (eq,%1) </condition>
+      </count>
+      <args> 3 2 </args>
+      <args> 7 3 </args>
+    </group>
+  </constraints>
+</instance>
