@@ -24,7 +24,7 @@ header {
 }
 
 #titleApplication{
-  color: lightgray;
+  color: #eaeaea;
   font-size:2em;
 }
 </style>

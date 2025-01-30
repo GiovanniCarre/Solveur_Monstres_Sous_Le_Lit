@@ -17,7 +17,7 @@
     </svg>
     <div class="footerRect">
       <img src="/assets/img/monstres/monstres_7.png" class="monstreAccueil"/>
-      <div>L'équipe des développeurs</div>
+      <div>L'équipe des développeurs<br>Berthelot - Biagi - Carré</div>
     </div>
   </div>
 </template>
@@ -27,6 +27,7 @@
   position: relative;
   width: 100%;
   height: auto;
+  color: #eaeaea;
 }
 
 .waves {

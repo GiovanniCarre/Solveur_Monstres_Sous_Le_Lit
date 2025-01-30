@@ -35,9 +35,24 @@
 button {
   width: 200px;
   background-color: #727097;
-  color: lightgray;
+  border-color: #727097;
+  border-style: solid;
+  border-width: 4px;
+  color: #eaeaea;
   margin: 0 25px;
   height: 4em;
+  transition: background-color 0.5s;
+}
+
+button:hover{
+  background-color: white;
+  color: #727097;
+  transition: background-color 0.5s;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .imagesMenu {
