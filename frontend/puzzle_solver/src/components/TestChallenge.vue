@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue';
 
+// Génération de la carte
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const loading = ref(false); // Indique si la requête est en cours
 
@@ -10,7 +11,7 @@ const padding = 10; // Espacement entre les grilles
 
 var img_monstres = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
 for (let i = 0; i < img_monstres.length; i++) {
-  img_monstres[i].src = `/assets/img/monstres/monstres_${i+1}.png`;
+  img_monstres[i].src = `/assets/img/monstres/monstres_${i + 1}.png`;
 }
 
 // 4 grilles (2x2 disposition)
@@ -57,7 +58,7 @@ const drawGrid = () => {
         const colorValue = (valeurChambres.value[gridIndex]?.[row]?.[col] ?? 0);
 
         if (colorValue >= 0) {
-          ctx.drawImage(img_monstres[colorValue-1], grid.x + col * cellSize, grid.y + row * cellSize, cellSize, cellSize);
+          ctx.drawImage(img_monstres[colorValue - 1], grid.x + col * cellSize, grid.y + row * cellSize, cellSize, cellSize);
         }
         ctx.strokeRect(grid.x + col * cellSize, grid.y + row * cellSize, cellSize, cellSize);
       }
@@ -83,14 +84,77 @@ const drawGrid = () => {
     }
   });
 };
+
 onMounted(() => {
   setTimeout(drawGrid, 100);
 });
+
+// Générer un tableau d'entiers de taille nbMonster
+const nbMonster = 5;
+const tableauMonstres = ref<number[]>([]);
+
+const generateMonsters = () => {
+  for (let i = 0; i < nbMonster; i++) {
+    tableauMonstres.value.push(Math.floor(Math.random() * 9));
+  }
+};
+
+// Fonction pour envoyer une requête au backend
+const checkChallenge = async () => {
+  loading.value = true;
+
+  try {
+    // Envoi de la requête avec le tableauMonstres
+    const response = await fetch('http://localhost:3000/testChallenge', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ tableauMonstres: tableauMonstres.value }),
+    });
+
+    const result = await response.json();
+
+    // Mise à jour du statut en fonction de la réponse
+    if (result.result) {
+      // Afficher un indicateur vert
+      alert('Défi réalisable !');
+    } else {
+      // Afficher un indicateur rouge
+      alert('Défi non réalisable.');
+    }
+  } catch (error) {
+    console.error('Erreur lors de la vérification du défi:', error);
+  } finally {
+    loading.value = false;
+  }
+};
+
+generateMonsters(); // Initialisation du tableau
 </script>
 
 <template>
   <canvas id="game" ref="canvasRef"></canvas>
   <br>
+
+  <button @click="checkChallenge">
+    <span v-if="loading">😅 Envoi en cours...</span>
+    <span v-else>Tester le défi</span>
+  </button>
+
+  <section class="challengeSection">
+    <div class="monster" v-for="(monster, index) in tableauMonstres" :key="index">
+      <input class="selectionMonsterNumber"
+             type="number"
+             v-model="tableauMonstres[index]"
+             :min="0"
+             :max="30"
+             :step="1"
+      />
+
+      <img class="imgMonster" :src="`/assets/img/monstres/monstres_${monster + 1}.png`" alt="monstres monster"/>
+    </div>
+  </section>
 </template>
 
 <style scoped>
@@ -111,5 +175,9 @@ button span {
   display: flex;
   align-items: center;
   gap: 5px;
+}
+
+.challengeSection {
+  margin-top: 20px;
 }
 </style>

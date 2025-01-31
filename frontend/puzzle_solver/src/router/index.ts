@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../components/Home.vue'
 import GeneratePuzzle from "../components/GeneratePuzzle.vue";
-import SolvePuzzle from "../components/SolvePuzzle.vue";
+import TestChallenge from "../components/TestChallenge.vue";
 import ModifyPuzzle from "../components/ModifyPuzzle.vue";
 
 // Définition des routes sans le type explicite RouteRecordRaw
@@ -17,9 +17,9 @@ const routes = [
         component: GeneratePuzzle,
     },
     {
-        path: '/solve-puzzle',
-        name: 'SolvePuzzle',
-        component: SolvePuzzle,
+        path: '/test-challenge',
+        name: 'TestChallenge',
+        component: TestChallenge,
     },{
         path: '/modify-game',
         name: 'ModifyPuzzle',

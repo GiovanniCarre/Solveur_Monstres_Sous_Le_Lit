@@ -9,7 +9,7 @@
     </button>
 
     <button>
-      <router-link to="/solve-puzzle">Tester un défi</router-link>
+      <router-link to="/test-challenge">Tester un défi</router-link>
     </button>
 
     <button>
