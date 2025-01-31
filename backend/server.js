@@ -11,7 +11,6 @@ app.use(express.json());
 
 // Route /generateChallenge : Appel à un script Python pour générer un challenge
 app.get('/generateChallenge', (req, res) => {
-    // Utilisation de /bin/bash -c pour exécuter les commandes dans un shell interactif
     const command = '/bin/bash -c "source /home/etud/Documents/cours/deep_learning/virtualenv/bin/activate && python3 scriptPyCSP3/generateChallenge.py"';
 
     exec(command, (error, stdout, stderr) => {
@@ -37,9 +36,13 @@ app.get('/generateChallenge', (req, res) => {
 
 
 
-// Route /verifyGame : Appel à un script Python pour vérifier le jeu
-app.get('/verifyGame', (req, res) => {
-    exec('python3 path/to/your/verify_game.py', (error, stdout, stderr) => {
+// Route /testChallenge : Appel à un script Python pour vérifier le défi
+app.post('/testChallenge', (req, res) => {
+
+    const tableauMonstresString = JSON.stringify(req.body.tableauMonstres);
+    const command = `/bin/bash -c "source /home/etud/Documents/cours/deep_learning/virtualenv/bin/activate && python3 scriptPyCSP3/testChallenge.py '${tableauMonstresString}'"`;
+
+    exec(command, (error, stdout, stderr) => {
         if (error) {
             console.error(`Erreur: ${error.message}`);
             return res.status(500).json({ error: error.message });
@@ -48,9 +51,13 @@ app.get('/verifyGame', (req, res) => {
             console.error(`Erreur de script: ${stderr}`);
             return res.status(500).json({ error: stderr });
         }
-        // Supposons que le script retourne un true ou false
-        const result = stdout.trim() === 'true'; // On suppose que le script retourne "true" ou "false"
-        res.json({ success: result });
+        try {
+            console.log(stdout)
+            res.json({ result: stdout });
+        } catch (e) {
+            console.error('Erreur lors du parsing JSON:', stdout);
+            res.status(500).json({ error: 'Erreur lors du parsing du JSON' });
+        }
     });
 });
 
