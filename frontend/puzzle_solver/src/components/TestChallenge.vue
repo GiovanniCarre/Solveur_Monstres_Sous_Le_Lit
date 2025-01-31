@@ -83,25 +83,6 @@ const drawGrid = () => {
     }
   });
 };
-
-const challengesTab = ref<number[][]>([]);
-
-async function fetchChallenges() {
-  loading.value = true; // Activer le mode attente
-  try {
-    console.log("Requête en cours...");
-    const response = await fetch("http://localhost:3000/generateChallenge");
-    if (!response.ok) alert("Erreur lors de la récupération des défis");
-
-    challengesTab.value = await response.json();
-    console.log("Défis récupérés :", challengesTab.value);
-  } catch (error) {
-    console.error("Erreur:", error);
-  } finally {
-    loading.value = false; // Désactiver le mode attente
-  }
-}
-
 onMounted(() => {
   setTimeout(drawGrid, 100);
 });
@@ -110,22 +91,6 @@ onMounted(() => {
 <template>
   <canvas id="game" ref="canvasRef"></canvas>
   <br>
-  <button @click="fetchChallenges">
-    <span v-if="loading">⏳</span>
-    <span v-else>Regénérer des défis</span>
-  </button>
-  <br>
-  <div v-if="challengesTab.length">
-    <h3>Défis générés :</h3>
-    <div v-for="(challenge, index) in challengesTab" :key="index" class="challenge">
-      <div v-for="(num, idx) in challenge" :key="idx" class="challenge-item">
-        <div v-if="num !== 0" class="monstreNumber">
-          <p class="indicationNumberMonster">x {{ num }}</p>
-          <img class="monsterImgChallenge" :src="`/assets/img/monstres/monstres_${idx}.png`" alt="Monstre" />
-        </div>
-      </div>
-    </div>
-  </div>
 </template>
 
 <style scoped>
@@ -134,36 +99,6 @@ onMounted(() => {
   height: 500px;
   display: block;
   margin-top: 1em;
-}
-
-.challenge-item {
-  width: min-content;
-  margin: auto 0 2px 0;
-}
-
-.challenge {
-  width: 80%;
-  background-color: lightGray;
-  border: solid 2px black;
-  height: 200px;
-  display: flex;
-  text-align: center;
-  margin: 1em 0;
-}
-
-.monstreNumber {
-  display: inline-block;
-  width: 150px;
-  height: auto;
-}
-
-.monsterImgChallenge {
-  width: 150px;
-}
-
-.indicationNumberMonster {
-  color: black;
-  margin: 0;
 }
 
 button {
