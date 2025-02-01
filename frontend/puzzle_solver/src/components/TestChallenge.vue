@@ -29,12 +29,58 @@ const valeurChambres = ref<number[][][]>([
   [[3, 6, 5], [1, -1, 8], [-1, -1, 7]]
 ]);
 
-const valeurMasques = ref<boolean[][][]>([
+var valeurMasques = ref<boolean[][][]>([
   [[false, true, false], [false, false, false], [false, true, false]],
   [[true, false, false], [false, false, false], [false, true, false]],
   [[false, false, false], [false, true, true], [false, false, false]],
   [[true, false, false], [false, false, false], [false, false, true]]
 ]);
+
+var pointerX = 0;
+var pointerY = 0;
+
+const tournerMasque = (index: number): void => {
+  const grid2: boolean[][] = [
+    [false, false, false],
+    [false, false, false],
+    [false, false, false]
+  ];
+  for (let i = 0; i < 3; i++) {
+    grid2[0][2 - i] = valeurMasques.value[index][i][0];
+    grid2[i][0] = valeurMasques.value[index][2][i];
+    grid2[2][i] = valeurMasques.value[index][2 - i][2];
+    grid2[2 - i][2] = valeurMasques.value[index][0][2 - i];
+  }
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+      valeurMasques.value[index][i][j] = grid2[i][j];
+    }
+  }
+}
+
+const smallGridSize = 3; // Taille des petites grilles
+const smallCellSize = cellSize / 2.5; // Cellules plus petites
+// Définition des nouvelles petites grilles (en colonne à droite)
+const smallGrids = grids.map((_, index) => ({
+  index : index,
+  defaultX: (gridSize * cellSize) * 2 + padding * 2 +1.5*smallCellSize, // Aligné à droite des grandes grilles
+  defaultY: index * (smallGridSize * smallCellSize) + (index) * padding+1.5*smallCellSize, // Même hauteur que la grille correspondante
+  x : (gridSize * cellSize) * 2 + padding * 2 +1.5*smallCellSize,
+  y : index * (smallGridSize * smallCellSize) + (index) * padding+1.5*smallCellSize,
+  cellSize : smallCellSize,
+  isSelected: false,
+  inGrid: false,
+  rotate:()=>{ tournerMasque(index) }
+}));
+
+const pointInRect = (px : number, py : number, rx : number, ry : number, w : number, h : number) => {
+  if (px < rx || px > rx + w) return false;
+  return (py >= ry && py <= ry + h)
+}
+
+const pointInGrid = (px : number, py : number, gridNumber : number) => {
+  return pointInRect(px, py, (gridNumber%2)*(gridSize*cellSize+padding), Math.floor(gridNumber/2)*(gridSize*cellSize+padding), gridSize*cellSize, gridSize*cellSize);
+}
 
 const drawGrid = () => {
   const canvas = canvasRef.value;
@@ -42,9 +88,6 @@ const drawGrid = () => {
 
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-
-  const smallGridSize = 3; // Taille des petites grilles
-  const smallCellSize = cellSize / 2.5; // Cellules plus petites
 
   canvas.width = 600;
   canvas.height = 500;
@@ -65,28 +108,67 @@ const drawGrid = () => {
     }
   });
 
-  // Définition des nouvelles petites grilles (en colonne à droite)
-  const smallGrids = grids.map((_, index) => ({
-    x: (gridSize * cellSize) * 2 + padding * 2, // Aligné à droite des grandes grilles
-    y: index * (smallGridSize * smallCellSize) + (index) * padding // Même hauteur que la grille correspondante
-  }));
-
   // Dessiner les petites grilles
   smallGrids.forEach((smallGrid, gridIndex) => {
+    if (smallGrid.isSelected){
+      smallGrid.x = pointerX;
+      smallGrid.y = pointerY;
+    }
     for (let row = 0; row < smallGridSize; row++) {
       for (let col = 0; col < smallGridSize; col++) {
         if (valeurMasques.value[gridIndex]?.[row]?.[col] == false) {
           ctx.fillStyle = `hsl(${Math.random() * 360}, 0%, 55%)`;
-          ctx.fillRect(smallGrid.x + col * smallCellSize, smallGrid.y + row * smallCellSize, smallCellSize, smallCellSize);
-          ctx.strokeRect(smallGrid.x + col * smallCellSize, smallGrid.y + row * smallCellSize, smallCellSize, smallCellSize);
+          smallGrid.cellSize = (smallGrid.inGrid || smallGrid.isSelected) ? cellSize : smallCellSize;
+          ctx.fillRect(smallGrid.x + (col - 1.5) * smallGrid.cellSize, smallGrid.y+ (row - 1.5)* smallGrid.cellSize, smallGrid.cellSize, smallGrid.cellSize);
+          ctx.strokeRect(smallGrid.x + (col - 1.5) * smallGrid.cellSize, smallGrid.y + (row - 1.5)* smallGrid.cellSize, smallGrid.cellSize, smallGrid.cellSize);
         }
       }
     }
   });
 };
 
+const init = () => {
+  const canvas = canvasRef.value;
+  canvas?.addEventListener('mousemove', (event) => {
+    pointerX = event.offsetX;
+    pointerY = event.offsetY;
+  });
+  canvas?.addEventListener('contextmenu', (event) => {
+    event.preventDefault();
+    smallGrids.forEach((grid, _) => {
+      if (grid.inGrid && Math.abs(pointerX - grid.x) <= 0.5 * gridSize * grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5 * gridSize * grid.cellSize) {
+        grid.rotate();
+      }
+    });
+  });
+  canvas?.addEventListener('click', (_) => {
+    smallGrids.forEach((grid, _) => {
+      if (grid.isSelected) {
+        grid.isSelected = false;
+        let inGrid = false;
+        for (let i = 0; i < 4; i++) {
+          if (pointInGrid(pointerX, pointerY, i)) {
+            grid.x = (i%2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
+            grid.y = Math.floor(i/2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
+            inGrid = true;
+            break;
+          }
+        }
+        if (! inGrid) {
+          grid.x = grid.defaultX;
+          grid.y = grid.defaultY;
+        }
+        grid.inGrid = inGrid;
+      } else if (Math.abs(pointerX - grid.x) <= 0.5*gridSize*grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5*gridSize*grid.cellSize) {
+        grid.isSelected = true;
+      }
+    })
+  });
+}
+
 onMounted(() => {
-  setTimeout(drawGrid, 100);
+  setTimeout(init, 100);
+  setInterval(drawGrid, 20);
 });
 
 // Générer un tableau d'entiers de taille nbMonster

@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Route /generateChallenge : Appel à un script Python pour générer un challenge
 app.get('/generateChallenge', (req, res) => {
-    const command = '/bin/bash -c "source /home/etud/Documents/cours/deep_learning/virtualenv/bin/activate && python3 scriptPyCSP3/generateChallenge.py"';
+    const command = '/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/generateChallenge.py"';
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -40,7 +40,7 @@ app.get('/generateChallenge', (req, res) => {
 app.post('/testChallenge', (req, res) => {
 
     const tableauMonstresString = JSON.stringify(req.body.tableauMonstres);
-    const command = `/bin/bash -c "source /home/etud/Documents/cours/deep_learning/virtualenv/bin/activate && python3 scriptPyCSP3/testChallenge.py '${tableauMonstresString}'"`;
+    const command = `/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/testChallenge.py '${tableauMonstresString}'"`;
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
@@ -85,7 +85,7 @@ app.get('/generateNewGame', (req, res) => {
 
 // Route /solveGame : Appel à un script Python pour résoudre le jeu
 app.get('/solveGame', (req, res) => {
-    const command = '/bin/bash -c "source /home/etud/Documents/cours/deep_learning/virtualenv/bin/activate && python3 scriptPyCSP3/solveGame.py"';
+    const command = '/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/solveGame.py"';
 
     exec(command, (error, stdout, stderr) => {
         if (error) {
