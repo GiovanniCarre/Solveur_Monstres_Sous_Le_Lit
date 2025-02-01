@@ -3,15 +3,41 @@ import { onMounted, ref } from 'vue';
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
 const loading = ref(false); // Indique si la requête est en cours
+const imagesLoaded = ref(false); // Track if images are loaded
 
 const gridSize = 3;
 const cellSize = 80; // Taille d'une cellule
 const padding = 10; // Espacement entre les grilles
 
-var img_monstres = [new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image(), new Image()];
-for (let i = 0; i < img_monstres.length; i++) {
-  img_monstres[i].src = `/assets/img/monstres/monstres_${i+1}.png`;
-}
+
+
+
+
+const img_monstres: HTMLImageElement[] = [];
+
+const preloadImages = async () => {
+  const promises = [];
+
+  for (let i = 0; i < 9; i++) {
+    const img = new Image();
+    img.src = `/assets/img/monstres/monstres_${i + 1}.png`;
+
+    promises.push(
+        new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve(); // Prevent blocking if an image fails
+        })
+    );
+
+    img_monstres.push(img);
+  }
+
+  await Promise.all(promises);
+  console.log("Images loaded");
+  imagesLoaded.value = true;
+  drawGrid(); // Draw the canvas only when images are ready
+};
+
 
 // 4 grilles (2x2 disposition)
 const grids = [
@@ -36,6 +62,7 @@ const valeurMasques = ref<boolean[][][]>([
 ]);
 
 const drawGrid = () => {
+  if (!imagesLoaded.value) return;
   const canvas = canvasRef.value;
   if (!canvas) return;
 
@@ -102,17 +129,145 @@ async function fetchChallenges() {
   }
 }
 
+
+//pour la modification des masques
+const estConnexe = (grid: boolean[][]): boolean => {
+  const rows = grid.length;
+  const cols = grid[0].length;
+  let visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+
+  // Trouver la première cellule "true" (masque actif)
+  let start: [number, number] | null = null;
+  let totalFalseCells = 0;
+
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      if (!grid[r][c]) {
+        totalFalseCells++;
+        if (!start) start = [r, c]; // On prend le premier élément "true"
+      }
+    }
+  }
+
+  if (!start) return false; // Si aucune case active, ce n'est pas connexe
+
+  // BFS / DFS pour vérifier la connexité
+  let queue: [number, number][] = [start];
+  visited[start[0]][start[1]] = true;
+  let visitedCount = 0;
+
+  const directions = [
+    [0, 1], [1, 0], [0, -1], [-1, 0] // Droite, Bas, Gauche, Haut
+  ];
+
+  while (queue.length) {
+    const [r, c] = queue.shift()!;
+    visitedCount++;
+
+    for (const [dr, dc] of directions) {
+      const nr = r + dr;
+      const nc = c + dc;
+      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols && !grid[nr][nc] && !visited[nr][nc]) {
+        visited[nr][nc] = true;
+        queue.push([nr, nc]);
+      }
+    }
+  }
+
+  return visitedCount === totalFalseCells; // Connexe si on a visité toutes les cellules "true"
+};
+
+
+
+
+
+const handleClick = (event: MouseEvent) => {
+  const canvas = canvasRef.value;
+  if (!canvas) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const clickX = event.clientX - rect.left;
+  const clickY = event.clientY - rect.top;
+
+  let updated = false;
+
+  // Check if the click is in a large grid (monsters)
+  grids.forEach((grid, gridIndex) => {
+    for (let row = 0; row < gridSize; row++) {
+      for (let col = 0; col < gridSize; col++) {
+        const xStart = grid.x + col * cellSize;
+        const yStart = grid.y + row * cellSize;
+        const xEnd = xStart + cellSize;
+        const yEnd = yStart + cellSize;
+
+        if (clickX >= xStart && clickX < xEnd && clickY >= yStart && clickY < yEnd) {
+          // Update monster value
+          if (valeurChambres.value[gridIndex][row][col] !== -1) {
+            valeurChambres.value[gridIndex][row][col] = (valeurChambres.value[gridIndex][row][col] + 1) % 9;
+            if (valeurChambres.value[gridIndex][row][col] == 0){
+              valeurChambres.value[gridIndex][row][col] = -1;
+            }
+            updated = true;
+          } else {
+            valeurChambres.value[gridIndex][row][col] = 1;
+            updated = true;
+          }
+        }
+      }
+    }
+  });
+
+  // Check if the click is in a small grid (mask)
+  const smallGrids = grids.map((_, index) => ({
+    x: (gridSize * cellSize) * 2 + padding * 2,
+    y: index * (3 * (cellSize / 2.5)) + index * padding
+  }));
+
+  smallGrids.forEach((smallGrid, gridIndex) => {
+    for (let row = 0; row < 3; row++) {
+      for (let col = 0; col < 3; col++) {
+        const xStart = smallGrid.x + col * (cellSize / 2.5);
+        const yStart = smallGrid.y + row * (cellSize / 2.5);
+        const xEnd = xStart + (cellSize / 2.5);
+        const yEnd = yStart + (cellSize / 2.5);
+
+        if (clickX >= xStart && clickX < xEnd && clickY >= yStart && clickY < yEnd) {
+          // Toggle mask value
+          valeurMasques.value[gridIndex][row][col] = !valeurMasques.value[gridIndex][row][col];
+          if (estConnexe(valeurMasques.value[gridIndex])){
+            updated = true;
+          } else {
+            valeurMasques.value[gridIndex][row][col] = !valeurMasques.value[gridIndex][row][col];
+          }
+        }
+      }
+    }
+  });
+
+  // Redraw the canvas if something was updated
+  if (updated) drawGrid();
+};
+
+
 onMounted(() => {
-  setTimeout(drawGrid, 100);
+  preloadImages()
+
+  const canvas = canvasRef.value;
+  if (canvas) {
+    canvas.addEventListener("click", handleClick);
+  }
 });
+
 </script>
+
+
 
 <template>
   <canvas id="game" ref="canvasRef"></canvas>
   <br>
   <button @click="fetchChallenges">
     <span v-if="loading">⏳</span>
-    <span v-else>Regénérer des défis</span>
+    <span v-else>Générer des défis</span>
   </button>
   <br>
   <div v-if="challengesTab.length">
