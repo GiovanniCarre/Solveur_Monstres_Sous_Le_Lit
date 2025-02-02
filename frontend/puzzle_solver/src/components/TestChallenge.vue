@@ -45,6 +45,7 @@ const tournerMasque = (index: number): void => {
     [false, false, false],
     [false, false, false]
   ];
+  grid2[1][1] = valeurMasques.value[index][1][1];
   for (let i = 0; i < 3; i++) {
     grid2[0][2 - i] = valeurMasques.value[index][i][0];
     grid2[i][0] = valeurMasques.value[index][2][i];
