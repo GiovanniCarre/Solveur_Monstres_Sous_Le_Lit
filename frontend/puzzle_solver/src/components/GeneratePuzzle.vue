@@ -2,7 +2,8 @@
 import { onMounted, ref } from 'vue';
 
 const canvasRef = ref<HTMLCanvasElement | null>(null);
-const loading = ref(false); // Indique si la requête est en cours
+const loading = ref(false);
+const loading2 = ref(false);
 const imagesLoaded = ref(false); // Track if images are loaded
 
 const gridSize = 3;
@@ -47,6 +48,7 @@ const grids = [
   { x: gridSize * cellSize + padding, y: gridSize * cellSize + padding }
 ];
 
+//-1 = vide, n >=1 id de monstre
 const valeurChambres = ref<number[][][]>([
   [[-1, -1, 8], [1, -1, 7], [2, 2, -1]],
   [[3, -1, -1], [6, -1, -1], [1, 5, 8]],
@@ -54,12 +56,38 @@ const valeurChambres = ref<number[][][]>([
   [[3, 6, 5], [1, -1, 8], [-1, -1, 7]]
 ]);
 
+
+onMounted(async () => {
+  const response = await fetch('http://localhost:3000/dispositionVisuelle');
+  const resultTab = await response.json();
+
+  // Remplacer tous les 0 par des -1 dans le tableau
+  valeurChambres.value = resultTab.map(row =>
+      row.map(innerRow =>
+          innerRow.map(value => value === 0 ? -1 : value)  // Remplace 0 par -1
+      )
+  );
+});
+
+
+//false masque visible, true masque cache
 const valeurMasques = ref<boolean[][][]>([
   [[false, true, false], [false, false, false], [false, true, false]],
   [[true, false, false], [false, false, false], [false, true, false]],
   [[false, false, false], [false, true, true], [false, false, false]],
   [[true, false, false], [false, false, false], [false, false, true]]
 ]);
+
+onMounted(async () => {
+  const response = await fetch('http://localhost:3000/masquesFixes');
+  const resultTab = await response.json();
+
+  valeurMasques.value = resultTab.map(row =>
+      row.map(innerRow =>
+          innerRow.map(value => value !== 0)
+      )
+  );
+});
 
 const drawGrid = () => {
   if (!imagesLoaded.value) return;
@@ -114,18 +142,44 @@ const drawGrid = () => {
 const challengesTab = ref<number[][]>([]);
 
 async function fetchChallenges() {
-  loading.value = true; // Activer le mode attente
+  loading.value = true;
   try {
-    console.log("Requête en cours...");
-    const response = await fetch("http://localhost:3000/generateChallenge");
-    if (!response.ok) alert("Erreur lors de la récupération des défis");
+    const response = await fetch("http://localhost:3000/generateChallenge", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        valeurChambres: valeurChambres.value,
+        valeurMasques: valeurMasques.value,
+      }),
+    });
 
-    challengesTab.value = await response.json();
-    console.log("Défis récupérés :", challengesTab.value);
+    if (!response.ok) {
+      alert("Erreur lors de la récupération des défis");
+      return;
+    }
+
+    const resultTab2 = await response.json();
+    challengesTab.value = resultTab2
+    console.log("Défis récupérés :", resultTab2);
   } catch (error) {
     console.error("Erreur:", error);
   } finally {
     loading.value = false; // Désactiver le mode attente
+  }
+}
+
+
+async function resetMap() {
+  loading2.value = true; // Activer le mode attente
+  try {
+    await fetch("http://localhost:3000/resetChallenge");
+    window.location.reload();
+  } catch (error) {
+    console.error("Erreur:", error);
+  } finally {
+    loading2.value = false; // Désactiver le mode attente
   }
 }
 
@@ -269,6 +323,10 @@ onMounted(() => {
     <span v-if="loading">⏳</span>
     <span v-else>Générer des défis</span>
   </button>
+  <button id='buttonClick2' @click="resetMap">
+    <span v-if="loading2">⏳</span>
+    <span v-else>Réinitialiser les masques et les lits</span>
+  </button>
   <br>
   <div v-if="challengesTab.length">
     <h3>Défis générés :</h3>
@@ -297,6 +355,11 @@ onMounted(() => {
 }
 
 #buttonClick{
+  color:white;
+  margin-right:5em;
+}
+
+#buttonClick2{
   color:white;
 }
 

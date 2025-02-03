@@ -50,7 +50,16 @@ var valeurMasques = ref<boolean[][][]>([
   [[false, false, false], [false, true, true], [false, false, false]],
   [[true, false, false], [false, false, false], [false, false, true]]
 ]);
+onMounted(async () => {
+  const response = await fetch('http://localhost:3000/masquesFixes');
+  const resultTab = await response.json();
 
+  valeurMasques.value = resultTab.map(row =>
+      row.map(innerRow =>
+          innerRow.map(value => value !== 0)
+      )
+  );
+});
 var pointerX = 0;
 var pointerY = 0;
 
@@ -188,13 +197,14 @@ onMounted(() => {
 });
 
 // Générer un tableau d'entiers de taille nbMonster
-const nbMonster = 7;
+const nbMonster = 8;
 const tableauMonstres = ref<number[]>([]);
 
 const generateMonsters = () => {
   for (let i = 0; i < nbMonster; i++) {
     tableauMonstres.value.push(Math.floor(Math.random() * 9));
   }
+  tableauMonstres.value = [0, 0, 2, 0, 0, 0, 3, 0]
 };
 
 // Fonction pour envoyer une requête au backend
@@ -215,7 +225,7 @@ const checkChallenge = async () => {
     const result = await response.json();
     console.log(result)
     // Mise à jour du statut en fonction de la réponse
-    if (result.result == "True") {
+    if (result.result.includes("True")) {
       // Afficher un indicateur vert
       alert('Défi réalisable !');
     } else {

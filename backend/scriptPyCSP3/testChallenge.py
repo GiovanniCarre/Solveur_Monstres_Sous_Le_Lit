@@ -66,15 +66,11 @@ def defiRealisable(defi):
     return False
 
 
-
-
 if __name__ == "__main__":
     monster_data = json.loads(sys.argv[1])
-    #print("Tableau des monstres reçu:")
-    #for monster in monster_data:
-     #   print(monster)
 
-    nbCategoriesDeMonstres = 7
+
+    nbCategoriesDeMonstres = 8
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)

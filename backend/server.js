@@ -12,7 +12,39 @@ app.use(cors());
 app.use(express.json());
 
 // Route /generateChallenge : Appel à un script Python pour générer un challenge
-app.get('/generateChallenge', (req, res) => {
+app.post('/generateChallenge', (req, res) => {
+    let { valeurChambres, valeurMasques } = req.body; // Récupération des données envoyées
+
+    if (!valeurChambres || !valeurMasques) {
+        return res.status(400).send("Données manquantes");
+    }
+
+    valeurChambres = valeurChambres.map(cube =>
+        cube.map(ligne =>
+            ligne.map(val => (val === -1 ? 0 : val))
+        )
+    );
+
+    // Transformer `true` en `0` et `false` en `1` dans `valeurMasques`
+    valeurMasques = valeurMasques.map(cube =>
+        cube.map(ligne =>
+            ligne.map(val => (val === true ? 1 : 0))
+        )
+    );
+
+    // Chemins des fichiers JSON
+    const dispositionVisuellesPath = "map/dispositionVisuelle.json";
+    const masquesFixesPath = "map/masquesFixes.json";
+
+    try {
+        // Écriture des valeurs dans les fichiers correspondants
+        fs.writeFileSync(dispositionVisuellesPath, JSON.stringify(valeurChambres, null, 2));
+        fs.writeFileSync(masquesFixesPath, JSON.stringify(valeurMasques, null, 2));
+
+    } catch (error) {
+        console.error("Erreur lors de l'enregistrement :", error);
+        res.status(500).send("Erreur lors de l'enregistrement des fichiers.");
+    }
     const command = '/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/generateChallenge.py"';
 
     exec(command, (error, stdout, stderr) => {
@@ -27,7 +59,6 @@ app.get('/generateChallenge', (req, res) => {
         // Le script Python renvoie un JSON ou un texte que l'on parse
         try {
             const result = JSON.parse(stdout);
-            console.log(stdout)
             res.json(result);
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', stdout);
@@ -54,7 +85,6 @@ app.post('/testChallenge', (req, res) => {
             return res.status(500).json({ error: stderr });
         }
         try {
-            console.log(stdout)
             res.json({ result: stdout });
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', stdout);
@@ -63,72 +93,44 @@ app.post('/testChallenge', (req, res) => {
     });
 });
 
-// Route /generateNewGame : Appel à un script Python pour générer un nouveau jeu
-app.get('/generateNewGame', (req, res) => {
-    exec('python3 path/to/your/generate_new_game.py', (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Erreur: ${error.message}`);
-            return res.status(500).json({ error: error.message });
-        }
-        if (stderr) {
-            console.error(`Erreur de script: ${stderr}`);
-            return res.status(500).json({ error: stderr });
-        }
-        try {
-            const result = JSON.parse(stdout);
-            console.log(result)
-            res.json(result);  // Envoie le résultat au client
-        } catch (e) {
-            console.error('Erreur lors du parsing JSON:', e);
-            res.status(500).json({ error: 'Erreur lors du parsing du JSON' });
-        }
-    });
+app.get('/resetChallenge', async (req, res) => {
+    try {
+        let sourceFile = 'map/dispositionVisuelleSave.json';
+        let destinationFile = 'map/dispositionVisuelle.json';
+
+        // Supprimer et copier le premier fichier
+        await new Promise((resolve, reject) => {
+            fs.unlink(destinationFile, (err) => {
+                if (err && err.code !== 'ENOENT') return reject(err);
+                fs.copyFile(sourceFile, destinationFile, (err) => {
+                    if (err) return reject(err);
+                    resolve();
+                });
+            });
+        });
+
+        sourceFile = 'map/masquesFixesSave.json';
+        destinationFile = 'map/masquesFixes.json';
+
+        // Supprimer et copier le deuxième fichier
+        await new Promise((resolve, reject) => {
+            fs.unlink(destinationFile, (err) => {
+                if (err && err.code !== 'ENOENT') return reject(err);
+                fs.copyFile(sourceFile, destinationFile, (err) => {
+                    if (err) return reject(err);
+                    resolve();
+                });
+            });
+        });
+
+        // Envoyer la réponse une seule fois
+        res.send("Jeu réinitialisé avec succès !");
+    } catch (error) {
+        console.error("Erreur :", error);
+        res.status(500).send("Erreur lors de la réinitialisation.");
+    }
 });
 
-// Route /solveGame : Appel à un script Python pour résoudre le jeu
-app.get('/solveGame', (req, res) => {
-    const command = '/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/solveGame.py"';
-
-    exec(command, (error, stdout, stderr) => {
-        if (error) {
-            console.error(`Erreur: ${error.message}`);
-            return res.status(500).json({ error: error.message });
-        }
-        if (stderr) {
-            console.error(`Erreur de script: ${stderr}`);
-            return res.status(500).json({ error: stderr });
-        }
-        try {
-
-            // Nettoyage : enlever les retours à la ligne et espaces
-            let cleanedStdout = stdout.trim();
-
-            // Ajouter les crochets nécessaires si le JSON est incomplet ou mal formé
-            if (cleanedStdout.startsWith("[") && cleanedStdout.endsWith("]")) {
-                cleanedStdout = cleanedStdout; // Déjà au bon format
-            } else {
-                console.error('La sortie n\'est pas au format JSON attendu.');
-                return res.status(500).json({ error: 'La sortie n\'est pas au format JSON attendu.' });
-            }
-
-            const result = JSON.parse(cleanedStdout);
-
-            // Vérification du type de résultat et de son format
-            if (result === false) {
-                res.json({ result: "False" });
-            } else if (Array.isArray(result) && result.every(Array.isArray)) {
-                res.json({ result: result });
-            } else {
-                res.status(500).json({ error: 'Format de réponse invalide' });
-            }
-        } catch (e) {
-            console.error('Erreur lors du parsing JSON:', e);
-            res.status(500).json({ error: 'Erreur lors du parsing du JSON' });
-        }
-
-
-    });
-});
 
 // Route pour servir les données JSON
 app.get('/dispositionVisuelle', (req, res) => {
@@ -142,8 +144,20 @@ app.get('/dispositionVisuelle', (req, res) => {
     });
 })
 
+// Route pour servir les données JSON
+app.get('/masquesFixes', (req, res) => {
+    // Lire le fichier JSON
+    fs.readFile(path.join(__dirname, 'map/masquesFixes.json'), 'utf-8', (err, data) => {
+        if (err) {
+            res.status(500).send('Erreur lors de la lecture du fichier');
+        } else {
+            res.json(JSON.parse(data));  // Envoie les données JSON au client
+        }
+    });
+})
+
 
 // Démarrer le serveur
 app.listen(port, () => {
-    console.log(`Serveur à l'écoute sur http://localhost:${port}`);
+    console.info(`Serveur à l'écoute sur http://localhost:${port}`);
 });

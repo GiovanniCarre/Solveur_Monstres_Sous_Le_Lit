@@ -78,7 +78,7 @@ def afficherSolution(sol):
             print(description+"],")
     print("]")
 if __name__ == "__main__":
-    nbCategoriesDeMonstres = 7
+    nbCategoriesDeMonstres = 8
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)
@@ -104,6 +104,5 @@ if __name__ == "__main__":
                 for j in range(10):
                     chambre.append(value(masquesSelectionnes[i][j], sol=k))
                 solution.append(chambre)
-            afficherSolution(solution)
     else :
         print("False")
