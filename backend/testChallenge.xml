@@ -140,5 +140,9 @@
       <args> 6 monstresVisiblesCategorie[6] </args>
       <args> 7 monstresVisiblesCategorie[7] </args>
     </group>
+    <instantiation>
+      <list> monstresVisiblesCategorie[1..7] </list>
+      <values> 8 6 8 4 1 3 6 </values>
+    </instantiation>
   </constraints>
 </instance>

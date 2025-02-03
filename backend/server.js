@@ -3,6 +3,8 @@ const { exec } = require('child_process');
 const app = express();
 const port = 3000;
 const cors = require('cors');
+const fs = require('fs');
+const path = require('path');
 
 
 app.use(cors());
@@ -127,6 +129,19 @@ app.get('/solveGame', (req, res) => {
 
     });
 });
+
+// Route pour servir les données JSON
+app.get('/dispositionVisuelle', (req, res) => {
+    // Lire le fichier JSON
+    fs.readFile(path.join(__dirname, 'map/dispositionVisuelle.json'), 'utf-8', (err, data) => {
+        if (err) {
+            res.status(500).send('Erreur lors de la lecture du fichier');
+        } else {
+            res.json(JSON.parse(data));  // Envoie les données JSON au client
+        }
+    });
+})
+
 
 // Démarrer le serveur
 app.listen(port, () => {

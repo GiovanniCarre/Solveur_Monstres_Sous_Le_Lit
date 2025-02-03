@@ -20,43 +20,17 @@ def rotate(grid, n):
     return flatten(grid)
 
 def creerChambres():
-    dispositionVisuelle = [[[0, 1, 2],
-                            [3, 0, 4],
-                            [5, 0, 0]],
+    with open("map/dispositionVisuelle.json", "r") as fichier:
+            dispositionVisuelle = json.load(fichier)
 
-                            [[1, 6, 0],
-                            [0, 3, 4],
-                            [5, 7, 0]],
-
-                            [[1, 2, 7],
-                            [3, 4, 0],
-                            [7, 6, 8]],
-
-                            [[0, 0, 0],
-                            [6, 1, 8],
-                            [3, 7, 4]]]
     chambres = []
     for chambre in dispositionVisuelle:
         chambres.append(flatten(chambre))
     return chambres
 
 def crerMasques() :
-    masquesFixes = \
-        [[[0, 1, 0],
-        [0, 0, 0],
-        [0, 1, 0]],
-
-        [[0, 0, 1],
-        [0, 0, 0],
-        [1, 0, 0]],
-
-        [[0, 1, 0],
-        [0, 1, 0],
-        [0, 0, 0]],
-
-        [[0, 0, 1],
-        [0, 0, 0],
-        [0, 1, 0]]]
+    with open("map/masquesFixes.json", "r") as fichier:
+                masquesFixes = json.load(fichier)
 
     masques = []
     for i in range(4):
@@ -96,15 +70,15 @@ def defiRealisable(defi):
 
 if __name__ == "__main__":
     monster_data = json.loads(sys.argv[1])
-    print("Tableau des monstres reçu:")
-    for monster in monster_data:
-        print(monster)
+    #print("Tableau des monstres reçu:")
+    #for monster in monster_data:
+     #   print(monster)
 
     nbCategoriesDeMonstres = 7
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)
-    nombreMontresObjectif = monster_data
+    nombreMontresObjectif = [0]+monster_data
     masquesVar = VarArray(size=[nMasques,10], dom=range(5))
     masquesSelectionnes = VarArray(size=[4,10], dom=range(5))
     selectionMasques = VarArray(size=4, dom=range(nMasques))
@@ -119,7 +93,22 @@ if __name__ == "__main__":
     )
     solutions = []
     defis = []
+    solutions = []
     if solve(sols=ALL) is SAT and n_solutions():
-        print("true")
-    else:
-        print("false")
+        #print("SAT avec ", n_solutions(), " solutions")
+        for k in range(n_solutions()):
+            solution = []
+            for i in range(4):
+                chambre = []
+                for j in range(10):
+                    chambre.append(value(masquesSelectionnes[i][j], sol=k))
+                solution.append(chambre)
+            solutions.append(solution)
+            defi = []
+            for i in range(nbCategoriesDeMonstres+1) :
+                defi.append(value(monstresVisiblesCategorie[i], sol=k))
+            defis.append(defi)
+
+    satisfy(monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
+
+    print(solve(sols=ALL) is SAT)

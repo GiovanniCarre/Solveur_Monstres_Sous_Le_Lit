@@ -265,7 +265,7 @@ onMounted(() => {
 <template>
   <canvas id="game" ref="canvasRef"></canvas>
   <br>
-  <button @click="fetchChallenges">
+  <button id='buttonClick' @click="fetchChallenges">
     <span v-if="loading">⏳</span>
     <span v-else>Générer des défis</span>
   </button>
@@ -296,6 +296,10 @@ onMounted(() => {
   margin: auto 0 2px 0;
 }
 
+#buttonClick{
+  color:white;
+}
+
 .challenge {
   width: 80%;
   background-color: lightGray;
@@ -315,6 +319,7 @@ onMounted(() => {
 .monsterImgChallenge {
   width: 150px;
 }
+
 
 .indicationNumberMonster {
   color: black;

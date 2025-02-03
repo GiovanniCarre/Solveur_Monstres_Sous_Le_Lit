@@ -1,6 +1,6 @@
-from pydoc import describe
-
 from pycsp3 import *
+import json
+from pydoc import describe
 
 def rightRotation(grid):
     grid2 = [[0,0,0],[0,0,0],[0,0,0]]
@@ -18,43 +18,17 @@ def rotate(grid, n):
     return flatten(grid)
 
 def creerChambres():
-    dispositionVisuelle = [[[0, 1, 2],
-                            [3, 0, 4],
-                            [5, 0, 0]],
-
-                            [[1, 6, 0],
-                            [0, 3, 4],
-                            [5, 7, 0]],
-
-                            [[1, 2, 7],
-                            [3, 4, 0],
-                            [7, 6, 8]],
-
-                            [[0, 0, 0],
-                            [6, 1, 8],
-                            [3, 7, 4]]]
+    with open("map/dispositionVisuelle.json", "r") as fichier:
+                dispositionVisuelle = json.load(fichier)
     chambres = []
     for chambre in dispositionVisuelle:
         chambres.append(flatten(chambre))
     return chambres
 
 def crerMasques() :
-    masquesFixes = \
-        [[[0, 1, 0],
-        [0, 0, 0],
-        [0, 1, 0]],
+    with open("map/masquesFixes.json", "r") as fichier:
+            masquesFixes = json.load(fichier)
 
-        [[0, 0, 1],
-        [0, 0, 0],
-        [1, 0, 0]],
-
-        [[0, 1, 0],
-        [0, 1, 0],
-        [0, 0, 0]],
-
-        [[0, 0, 1],
-        [0, 0, 0],
-        [0, 1, 0]]]
 
     masques = []
     for i in range(4):

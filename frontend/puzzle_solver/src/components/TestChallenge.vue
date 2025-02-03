@@ -22,13 +22,28 @@ const grids = [
   { x: gridSize * cellSize + padding, y: gridSize * cellSize + padding }
 ];
 
-const valeurChambres = ref<number[][][]>([
+var valeurChambres = ref<number[][][]>([
   [[-1, -1, 8], [1, -1, 7], [2, 2, -1]],
   [[3, -1, -1], [6, -1, -1], [1, 5, 8]],
   [[2, -1, -1], [2, 6, 8], [1, 4, 7]],
   [[3, 6, 5], [1, -1, 8], [-1, -1, 7]]
 ]);
 
+
+onMounted(async () => {
+  const response = await fetch('http://localhost:3000/dispositionVisuelle');
+  const resultTab = await response.json();
+
+  // Remplacer tous les 0 par des -1 dans le tableau
+  valeurChambres.value = resultTab.map(row =>
+      row.map(innerRow =>
+          innerRow.map(value => value === 0 ? -1 : value)  // Remplace 0 par -1
+      )
+  );
+});
+
+
+//false c'est visible, le masquie est là
 var valeurMasques = ref<boolean[][][]>([
   [[false, true, false], [false, false, false], [false, true, false]],
   [[true, false, false], [false, false, false], [false, true, false]],
@@ -173,7 +188,7 @@ onMounted(() => {
 });
 
 // Générer un tableau d'entiers de taille nbMonster
-const nbMonster = 5;
+const nbMonster = 7;
 const tableauMonstres = ref<number[]>([]);
 
 const generateMonsters = () => {
@@ -187,6 +202,7 @@ const checkChallenge = async () => {
   loading.value = true;
 
   try {
+    console.log(JSON.stringify({ tableauMonstres: tableauMonstres.value }))
     // Envoi de la requête avec le tableauMonstres
     const response = await fetch('http://localhost:3000/testChallenge', {
       method: 'POST',
@@ -197,9 +213,9 @@ const checkChallenge = async () => {
     });
 
     const result = await response.json();
-
+    console.log(result)
     // Mise à jour du statut en fonction de la réponse
-    if (result.result) {
+    if (result.result == "True") {
       // Afficher un indicateur vert
       alert('Défi réalisable !');
     } else {
@@ -220,7 +236,7 @@ generateMonsters(); // Initialisation du tableau
   <canvas id="game" ref="canvasRef"></canvas>
   <br>
 
-  <button @click="checkChallenge">
+  <button id='buttonClick' @click="checkChallenge">
     <span v-if="loading">😅 Envoi en cours...</span>
     <span v-else>Tester le défi</span>
   </button>
@@ -235,7 +251,7 @@ generateMonsters(); // Initialisation du tableau
              :step="1"
       />
 
-      <img class="imgMonster" :src="`/assets/img/monstres/monstres_${monster + 1}.png`" alt="monstres monster"/>
+      <img class="imgMonster" :src="`/assets/img/monstres/monstres_${index + 1}.png`" alt="monstres monster"/>
     </div>
   </section>
 </template>
@@ -248,6 +264,14 @@ generateMonsters(); // Initialisation du tableau
   margin-top: 1em;
 }
 
+.imgMonster{
+  width: 150px;
+}
+
+
+#buttonClick{
+  color:white;
+}
 button {
   position: relative;
   font-size: 16px;
@@ -262,5 +286,11 @@ button span {
 
 .challengeSection {
   margin-top: 20px;
+}
+
+.monster {
+  display: inline-block;
+  width:180px;
+  text-align: center;
 }
 </style>
