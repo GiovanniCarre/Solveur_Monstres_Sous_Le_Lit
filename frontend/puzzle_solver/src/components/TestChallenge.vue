@@ -202,7 +202,7 @@ const tableauMonstres = ref<number[]>([]);
 
 const generateMonsters = () => {
   for (let i = 0; i < nbMonster; i++) {
-    tableauMonstres.value.push(Math.floor(Math.random() * 9));
+    tableauMonstres.value.push(Math.floor(Math.random() * 2) * Math.floor(Math.random() * 4));
   }
   tableauMonstres.value = [0, 0, 2, 0, 0, 0, 3, 0]
 };
@@ -247,7 +247,7 @@ generateMonsters(); // Initialisation du tableau
   <br>
 
   <button id='buttonClick' @click="checkChallenge">
-    <span v-if="loading">😅 Envoi en cours...</span>
+    <span v-if="loading">Envoi en cours ⌛</span>
     <span v-else>Tester le défi</span>
   </button>
 
