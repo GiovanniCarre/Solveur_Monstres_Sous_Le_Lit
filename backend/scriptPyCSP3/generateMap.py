@@ -1,5 +1,4 @@
 from pydoc import describe
-
 from pycsp3 import *
 import json
 def afficherSolution(sol):
@@ -42,7 +41,7 @@ if __name__ == "__main__":
         (monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(nbCategoriesDeMonstres))
     )
     solutions = []
-    if solve(sols=10) is SAT and n_solutions():
+    if solve(sols=1) is SAT and n_solutions():
         for k in range(n_solutions()):
             solution = {"plateau" : [], "masques" : []}
             for i in range(4):
@@ -54,7 +53,8 @@ if __name__ == "__main__":
                 solution["plateau"].append(chambrePlateau)
                 solution["masques"].append(chambreMasque)
             solutions.append(solution)
+            json_format = json.dumps(solution)
 
-            #afficherSolution(solution)
+            print(solution)
     else :
         print("False")

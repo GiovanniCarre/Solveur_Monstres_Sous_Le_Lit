@@ -110,7 +110,6 @@ app.post('/generateMap', (req, res) => {
         }
         try {
 
-            console.log(stdout)
             res.json({ result: stdout });
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', stdout);
