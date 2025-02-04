@@ -1,7 +1,7 @@
 from pydoc import describe
 
 from pycsp3 import *
-
+import json
 def afficherSolution(sol):
     for i in range(4):
         description = "Chambre " + str(i) + " :"
@@ -27,9 +27,10 @@ def defiRealisable(defi):
     return False
 
 if __name__ == "__main__":
+    monster_data = json.loads(sys.argv[1])
     nbCategoriesDeMonstres = 8
     nMasques = 4
-    nombreMontresObjectif = [0, 0, 2, 0, 0, 0, 3, 0]#3 singes et 2 yetis (essayer aussi [0, 1, 1, 0, 1, 1, 0, 1, 0])
+    nombreMontresObjectif = [0]+monster_data
 
     masquesSelectionnes = VarArray(size=[4,9], dom=range(2))
     monstresVisibles = VarArray(size=[4,9], dom=range(nbCategoriesDeMonstres+1))
@@ -41,24 +42,19 @@ if __name__ == "__main__":
         (monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(nbCategoriesDeMonstres))
     )
     solutions = []
-    defis = []
     if solve(sols=10) is SAT and n_solutions():
-        print("SAT avec ", n_solutions(), " solutions")
         for k in range(n_solutions()):
             solution = {"plateau" : [], "masques" : []}
             for i in range(4):
                 chambrePlateau = []
                 chambreMasque = []
-                for j in range(10):
+                for j in range(9):
                     chambrePlateau.append(value(chambresVar[i][j], sol=k))
                     chambreMasque.append(value(masquesSelectionnes[i][j], sol=k))
                 solution["plateau"].append(chambrePlateau)
                 solution["masques"].append(chambreMasque)
             solutions.append(solution)
-            defi = []
-            for i in range(nbCategoriesDeMonstres+1) :
-                defi.append(value(monstresVisiblesCategorie[i], sol=k))
-            defis.append(defi)
-            afficherSolution(solution)
+
+            #afficherSolution(solution)
     else :
-        print("UNSAT")
+        print("False")

@@ -11,9 +11,6 @@ const cellSize = 80; // Taille d'une cellule
 const padding = 10; // Espacement entre les grilles
 
 
-
-
-
 const img_monstres: HTMLImageElement[] = [];
 
 const preloadImages = async () => {
@@ -166,7 +163,7 @@ async function fetchChallenges() {
   } catch (error) {
     console.error("Erreur:", error);
   } finally {
-    loading.value = false; // Désactiver le mode attente
+    loading.value = false;
   }
 }
 

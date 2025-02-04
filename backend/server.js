@@ -93,6 +93,32 @@ app.post('/testChallenge', (req, res) => {
     });
 });
 
+// Route
+app.post('/generateMap', (req, res) => {
+
+    const tableauMonstresString = JSON.stringify(req.body.tableauMonstres);
+    const command = `/bin/bash -c "source /home/etud/jupyter_env/bin/activate && python3 scriptPyCSP3/generateMap.py '${tableauMonstresString}'"`;
+
+    exec(command, (error, stdout, stderr) => {
+        if (error) {
+            console.error(`Erreur: ${error.message}`);
+            return res.status(500).json({ error: error.message });
+        }
+        if (stderr) {
+            console.error(`Erreur de script: ${stderr}`);
+            return res.status(500).json({ error: stderr });
+        }
+        try {
+
+            console.log(stdout)
+            res.json({ result: stdout });
+        } catch (e) {
+            console.error('Erreur lors du parsing JSON:', stdout);
+            res.status(500).json({ error: 'Erreur lors du parsing du JSON' });
+        }
+    });
+});
+
 app.get('/resetChallenge', async (req, res) => {
     try {
         let sourceFile = 'map/dispositionVisuelleSave.json';

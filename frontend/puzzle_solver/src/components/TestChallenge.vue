@@ -31,7 +31,7 @@ var valeurChambres = ref<number[][][]>([
 
 
 onMounted(async () => {
-  const response = await fetch('http://localhost:3000/dispositionVisuelle');
+  const response = await fetch('http://localhost:3000/generateMap');
   const resultTab = await response.json();
 
   // Remplacer tous les 0 par des -1 dans le tableau

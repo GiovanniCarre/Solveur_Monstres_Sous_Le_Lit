@@ -9,13 +9,38 @@ for (let i = 0; i < nbMonster; i++) {
   tableauMonstres.value.push(Math.floor(Math.random() * 2) * Math.floor(Math.random() * 4));
 }
 
+const loading = ref(false);
+
+async function fetchMap() {
+  loading.value = true;
+
+  try {
+    console.log(JSON.stringify({tableauMonstres: tableauMonstres.value}))
+    // Envoi de la requête avec le tableauMonstres
+    const response = await fetch('http://localhost:3000/generateMap', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({tableauMonstres: tableauMonstres.value}),
+    });
+
+    const result = await response.json();
+    console.log(result)
+
+  } catch (error) {
+    console.error('Erreur lors de la vérification du défi:', error);
+  } finally {
+    loading.value = false;
+  }
+};
 
 
 </script>
 
 <template>
   <section class="challengeSection">
-    <div class="monster" v-for="(monster, index) in tableauMonstres" :key="index">
+    <div class="monster" v-for="(_, index) in tableauMonstres" :key="index">
       <input class="selectionMonsterNumber"
              type="number"
              v-model="tableauMonstres[index]"
@@ -28,6 +53,11 @@ for (let i = 0; i < nbMonster; i++) {
     </div>
   </section>
 
+  <button id='buttonClick' @click="fetchMap">
+    <span v-if="loading">Envoi en cours ⌛</span>
+    <span v-else>Générer la carte et les masques</span>
+  </button>
+
   <canvas id="game" ref="canvasRef"></canvas>
 
 </template>
@@ -38,6 +68,7 @@ for (let i = 0; i < nbMonster; i++) {
 .imgMonster{
   width: 150px;
 }
+
 
 
 #buttonClick{
