@@ -336,6 +336,7 @@ onMounted(() => {
       </div>
     </div>
   </div>
+  <h3 v-else>Aucun défi ou pas encore lancé</h3>
 </template>
 
 <style scoped>
