@@ -63,6 +63,21 @@ def defiRealisable(defi):
         return (n_solutions() == 1)
     return False
 
+def hashDefi(defi) :
+    result = ""
+    for i in range(len(defi)) :
+        result += str(defi[i])+","
+    return result
+
+def compterDefis(defis) :
+    comptage = {}
+    for defi in defis :
+        if hashDefi(defi) in comptage :
+            comptage[hashDefi(defi)] += 1
+        else :
+            comptage[hashDefi(defi)] = 1
+    return comptage
+
 if __name__ == "__main__":
     nbCategoriesDeMonstres = 7
     chambres = creerChambres()
@@ -101,12 +116,13 @@ if __name__ == "__main__":
 
     satisfy(monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     nonRealisables = 0
-    nbMax = 3
+    nbMax = 15
     defisRealisable = []
+    compteDefis = compterDefis(defis)
     for i, defi in enumerate(defis):
         if i > nbMax:
             break
-        if defiRealisable(defi):
+        if compteDefis[hashDefi(defi)] == 1:
             defisRealisable.append(defi)
             #afficherDefi(defi)
             #afficherSolution(solution)
