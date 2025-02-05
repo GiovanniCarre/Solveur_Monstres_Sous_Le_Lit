@@ -244,22 +244,57 @@ onMounted(() => {
 
 
 
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  const monsterSections = document.querySelectorAll(".monster");
+
+  monsterSections.forEach((monster) => {
+    const input = monster.querySelector(".selectionMonsterNumber");
+    const decrement = monster.querySelector(".decrement");
+    const increment = monster.querySelector(".increment");
+
+    if (!input || !decrement || !increment) return;
+
+    decrement.addEventListener("click", function () {
+      let value = parseInt(input.value) || 0;
+      if (input.min !== "" && value > parseInt(input.min)) {
+        input.value = value - 1;
+        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
+      }
+    });
+
+    increment.addEventListener("click", function () {
+      let value = parseInt(input.value) || 0;
+      if (input.max !== "" && value < parseInt(input.max)) {
+        input.value = value + 1;
+        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
+      }
+    });
+  });
+});
+
 </script>
 
 <template>
-  <section class="challengeSection">
-    <div class="monster" v-for="(_, index) in tableauMonstres" :key="index">
-      <input class="selectionMonsterNumber"
-             type="number"
-             v-model="tableauMonstres[index]"
-             :min="0"
-             :max="30"
-             :step="1"
-      />
+    <section class="challengeSection">
+      <div class="monster" v-for="(_, index) in tableauMonstres" :key="index">
+        <div class="inputNb">
+          <button class="decrement">-</button>
+          <input class="selectionMonsterNumber"
+                 type="number"
+                 v-model="tableauMonstres[index]"
+                 :min="0"
+                 :max="30"
+                 :step="1"
+          />
+          <button class="increment">+</button>
+        </div>
 
-      <img class="imgMonster" :src="`/assets/img/monstres/monstres_${index + 1}.png`" alt="monstres monster"/>
-    </div>
-  </section>
+        <img class="imgMonster" :src="`/assets/img/monstres/monstres_${index + 1}.png`" alt="monstres monster"/>
+      </div>
+    </section>
+
 
   <button id='buttonClick' @click="fetchMap">
     <span v-if="loading">Envoi en cours ⌛</span>
@@ -298,12 +333,6 @@ button span {
   margin-top: 20px;
 }
 
-.monster {
-  display: inline-block;
-  width:180px;
-  text-align: center;
-}
-
 
 #game {
   width: 600px;
@@ -312,4 +341,63 @@ button span {
   margin-top: 1em;
 }
 
+
+.monster {
+  display: inline-block;
+  width:180px;
+  text-align: center;
+}
+
+.inputNb {
+  padding: 0.5em;
+  background-color: #727097;
+  font-size: 16px;
+  border-radius: 1em;
+  border-style: none;
+  margin:0.5em;
+  padding: 1em 0;
+}
+
+
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.decrement, .increment, .selectionMonsterNumber {
+  background: none;
+  border: none;
+  text-align: center;
+  font-size: 20px;
+  width: 20%;
+  padding: 0;
+}
+
+.number-input {
+  display: inline-flex;
+  align-items: center;
+}
+
+.number-input input[type=number] {
+  text-align: center;
+  width: 50px;
+}
+
+.number-input button {
+  width: 20px;
+  height: 20px;
+  border: 1px solid #ccc;
+  background-color: #f0f0f0;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.number-input button:hover {
+  background-color: #e0e0e0;
+}
 </style>
