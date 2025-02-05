@@ -331,7 +331,7 @@ onMounted(() => {
       <div v-for="(num, idx) in challenge" :key="idx" class="challenge-item">
         <div v-if="num !== 0" class="monstreNumber">
           <p class="indicationNumberMonster">x {{ num }}</p>
-          <img class="monsterImgChallenge" :src="`/assets/img/monstres/monstres_${idx}.png`" alt="Monstre" />
+          <img class="monsterImgChallenge" :src="`/assets/img/monstres/monstres_${idx+1}.png`" alt="Monstre" />
         </div>
       </div>
     </div>
