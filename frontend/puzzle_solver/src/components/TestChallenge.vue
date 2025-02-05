@@ -42,6 +42,20 @@ onMounted(async () => {
   );
 });
 
+const loading2 = ref(false);
+
+async function resetMap() {
+  loading2.value = true; // Activer le mode attente
+  try {
+    await fetch("http://localhost:3000/resetChallenge");
+    window.location.reload();
+  } catch (error) {
+    console.error("Erreur:", error);
+  } finally {
+    loading2.value = false; // Désactiver le mode attente
+  }
+}
+
 
 //false c'est visible, le masquie est là
 var valeurMasques = ref<boolean[][][]>([
@@ -212,7 +226,6 @@ const checkChallenge = async () => {
   loading.value = true;
 
   try {
-    console.log(JSON.stringify({ tableauMonstres: tableauMonstres.value }))
     // Envoi de la requête avec le tableauMonstres
     const response = await fetch('http://localhost:3000/testChallenge', {
       method: 'POST',
@@ -289,6 +302,11 @@ onMounted(() => {
     <span v-if="loading">Envoi en cours ⌛</span>
     <span v-else>Tester le défi</span>
   </button>
+  <button id='buttonClick2' @click="resetMap">
+    <span v-if="loading2">⏳</span>
+    <span v-else>Réinitialiser les masques et les lits</span>
+  </button>
+  <br>
 
   <section class="challengeSection">
     <div class="monster" v-for="(monster, index) in tableauMonstres" :key="index">
@@ -344,6 +362,15 @@ button span {
   display: inline-block;
   width:180px;
   text-align: center;
+}
+
+#buttonClick2{
+  color:white;
+}
+
+#buttonClick{
+  color:white;
+  margin-right:2em;
 }
 
 .inputNb {
