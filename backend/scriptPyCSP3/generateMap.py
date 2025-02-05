@@ -29,7 +29,7 @@ if __name__ == "__main__":
     monster_data = json.loads(sys.argv[1])
     nbCategoriesDeMonstres = 8
     nMasques = 4
-    nombreMontresObjectif = [0]+monster_data
+    nombreMontresObjectif = monster_data
 
     masquesSelectionnes = VarArray(size=[4,9], dom=range(2))
     monstresVisibles = VarArray(size=[4,9], dom=range(nbCategoriesDeMonstres+1))
@@ -48,7 +48,11 @@ if __name__ == "__main__":
                 chambrePlateau = []
                 chambreMasque = []
                 for j in range(9):
-                    chambrePlateau.append(value(chambresVar[i][j], sol=k))
+                    typeMonstre = value(chambresVar[i][j], sol=k)
+                    if typeMonstre == 0 :
+                        chambrePlateau.append(0)
+                    else :
+                        chambrePlateau.append(typeMonstre+1)
                     chambreMasque.append(value(masquesSelectionnes[i][j], sol=k))
                 solution["plateau"].append(chambrePlateau)
                 solution["masques"].append(chambreMasque)

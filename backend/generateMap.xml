@@ -62,7 +62,7 @@
     </group>
     <instantiation>
       <list> monstresVisiblesCategorie[] </list>
-      <values> 0x5 1 30 27 </values>
+      <values> 1 0 0 0 3 0 2 5 </values>
     </instantiation>
   </constraints>
 </instance>
