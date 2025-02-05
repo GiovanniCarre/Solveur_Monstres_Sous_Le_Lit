@@ -363,8 +363,10 @@ onMounted(() => {
 
 .challenge {
   width: 80%;
-  background-color: lightGray;
-  border: solid 2px black;
+  background-color: rgba(114, 112, 151, 0.5);
+  //border: solid 2px black;
+  border-radius: 2em;
+  padding: 1em;
   height: 200px;
   display: flex;
   text-align: center;
