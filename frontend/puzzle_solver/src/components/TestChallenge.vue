@@ -239,36 +239,47 @@ const checkChallenge = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-  const monsterSections = document.querySelectorAll(".monster");
+function inputNumberTS() {
+  setTimeout(() => { // Ajout d'un délai pour s'assurer que le DOM est bien mis à jour
+    const monsterSections = document.querySelectorAll(".monster");
 
-  monsterSections.forEach((monster) => {
-    const input = monster.querySelector(".selectionMonsterNumber");
-    const decrement = monster.querySelector(".decrement");
-    const increment = monster.querySelector(".increment");
+    monsterSections.forEach((monster) => {
+      const input = monster.querySelector(".selectionMonsterNumber");
+      const decrement = monster.querySelector(".decrement");
+      const increment = monster.querySelector(".increment");
 
-    if (!input || !decrement || !increment) return;
+      if (!input || !decrement || !increment) return;
 
-    decrement.addEventListener("click", function () {
-      let value = parseInt(input.value) || 0;
-      if (input.min !== "" && value > parseInt(input.min)) {
-        input.value = value - 1;
-        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
-      }
+      decrement.onclick = () => {
+        let value = parseInt(input.value) || 0;
+        let minValue = input.min ? parseInt(input.min) : 0;
+        if (value > minValue) {
+          input.value = (value - 1).toString();
+          input.dispatchEvent(new Event("input")); // Met à jour Vue
+        }
+      };
+
+      increment.onclick = () => {
+        let value = parseInt(input.value) || 0;
+        let maxValue = input.max ? parseInt(input.max) : 30;
+        if (value < maxValue) {
+          input.value = (value + 1).toString();
+          input.dispatchEvent(new Event("input")); // Met à jour Vue
+        }
+      };
     });
+  }, 100); // Petite temporisation pour s'assurer que Vue a mis à jour le DOM
+}
 
-    increment.addEventListener("click", function () {
-      let value = parseInt(input.value) || 0;
-      if (input.max !== "" && value < parseInt(input.max)) {
-        input.value = value + 1;
-        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
-      }
-    });
-  });
-});
 
 
 generateMonsters(); // Initialisation du tableau
+
+onMounted(() => {
+  setTimeout(init, 100);
+  setInterval(drawGrid, 20);
+  inputNumberTS(); // Exécuter l'initialisation des événements
+});
 </script>
 
 <template>
