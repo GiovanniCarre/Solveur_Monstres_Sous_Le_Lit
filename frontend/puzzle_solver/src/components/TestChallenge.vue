@@ -167,33 +167,35 @@ const init = () => {
     });
   });
   canvas?.addEventListener('click', (_) => {
-    smallGrids.forEach((grid, _) => {
+    smallGrids.forEach((grid) => {
       if (grid.isSelected) {
         grid.isSelected = false;
         let inGrid = false;
         for (let i = 0; i < 4; i++) {
           if (pointInGrid(pointerX, pointerY, i)) {
-            grid.x = (i%2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
-            grid.y = Math.floor(i/2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
+            grid.x = (i % 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
+            grid.y = Math.floor(i / 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
             inGrid = true;
             break;
           }
         }
-        if (! inGrid) {
+        if (!inGrid) {
           grid.x = grid.defaultX;
           grid.y = grid.defaultY;
         }
         grid.inGrid = inGrid;
-      } else if (Math.abs(pointerX - grid.x) <= 0.5*gridSize*grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5*gridSize*grid.cellSize) {
+      } else if (Math.abs(pointerX - grid.x) <= 0.5 * gridSize * grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5 * gridSize * grid.cellSize) {
         grid.isSelected = true;
       }
-    })
+    });
   });
+
 }
 
 onMounted(() => {
   setTimeout(init, 100);
   setInterval(drawGrid, 20);
+  inputNumberTS(); // Exécuter l'initialisation des événements
 });
 
 // Générer un tableau d'entiers de taille nbMonster
@@ -275,11 +277,6 @@ function inputNumberTS() {
 
 generateMonsters(); // Initialisation du tableau
 
-onMounted(() => {
-  setTimeout(init, 100);
-  setInterval(drawGrid, 20);
-  inputNumberTS(); // Exécuter l'initialisation des événements
-});
 </script>
 
 <template>
