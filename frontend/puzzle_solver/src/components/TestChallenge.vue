@@ -31,16 +31,30 @@ var valeurChambres = ref<number[][][]>([
 
 
 onMounted(async () => {
-  const response = await fetch('http://localhost:3000/generateMap');
+  const response = await fetch('http://localhost:3000/dispositionVisuelle');
   const resultTab = await response.json();
 
   // Remplacer tous les 0 par des -1 dans le tableau
   valeurChambres.value = resultTab.map(row =>
       row.map(innerRow =>
-          innerRow.map(value => value === 0 ? -1 : value)  // Remplace 0 par -1
+          innerRow.map(value => value === 0 ? -1 : value)
       )
   );
 });
+
+const loading2 = ref(false);
+
+async function resetMap() {
+  loading2.value = true; // Activer le mode attente
+  try {
+    await fetch("http://localhost:3000/resetChallenge");
+    window.location.reload();
+  } catch (error) {
+    console.error("Erreur:", error);
+  } finally {
+    loading2.value = false; // Désactiver le mode attente
+  }
+}
 
 
 //false c'est visible, le masquie est là
@@ -214,7 +228,6 @@ const checkChallenge = async () => {
   loading.value = true;
 
   try {
-    console.log(JSON.stringify({ tableauMonstres: tableauMonstres.value }))
     // Envoi de la requête avec le tableauMonstres
     const response = await fetch('http://localhost:3000/testChallenge', {
       method: 'POST',
@@ -225,7 +238,6 @@ const checkChallenge = async () => {
     });
 
     const result = await response.json();
-    console.log(result)
     // Mise à jour du statut en fonction de la réponse
     if (result.result.includes("True")) {
       // Afficher un indicateur vert
@@ -287,6 +299,11 @@ generateMonsters(); // Initialisation du tableau
     <span v-if="loading">Envoi en cours ⌛</span>
     <span v-else>Tester le défi</span>
   </button>
+  <button id='buttonClick2' @click="resetMap">
+    <span v-if="loading2">⏳</span>
+    <span v-else>Réinitialiser les masques et les lits</span>
+  </button>
+  <br>
 
   <section class="challengeSection">
     <div class="monster" v-for="(monster, index) in tableauMonstres" :key="index">
@@ -342,6 +359,15 @@ button span {
   display: inline-block;
   width:180px;
   text-align: center;
+}
+
+#buttonClick2{
+  color:white;
+}
+
+#buttonClick{
+  color:white;
+  margin-right:2em;
 }
 
 .inputNb {
