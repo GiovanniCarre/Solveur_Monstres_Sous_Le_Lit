@@ -31,16 +31,30 @@ var valeurChambres = ref<number[][][]>([
 
 
 onMounted(async () => {
-  const response = await fetch('http://localhost:3000/generateMap');
+  const response = await fetch('http://localhost:3000/dispositionVisuelle');
   const resultTab = await response.json();
 
   // Remplacer tous les 0 par des -1 dans le tableau
   valeurChambres.value = resultTab.map(row =>
       row.map(innerRow =>
-          innerRow.map(value => value === 0 ? -1 : value)  // Remplace 0 par -1
+          innerRow.map(value => value === 0 ? -1 : value)
       )
   );
 });
+
+const loading2 = ref(false);
+
+async function resetMap() {
+  loading2.value = true; // Activer le mode attente
+  try {
+    await fetch("http://localhost:3000/resetChallenge");
+    window.location.reload();
+  } catch (error) {
+    console.error("Erreur:", error);
+  } finally {
+    loading2.value = false; // Désactiver le mode attente
+  }
+}
 
 
 //false c'est visible, le masquie est là
@@ -167,33 +181,35 @@ const init = () => {
     });
   });
   canvas?.addEventListener('click', (_) => {
-    smallGrids.forEach((grid, _) => {
+    smallGrids.forEach((grid) => {
       if (grid.isSelected) {
         grid.isSelected = false;
         let inGrid = false;
         for (let i = 0; i < 4; i++) {
           if (pointInGrid(pointerX, pointerY, i)) {
-            grid.x = (i%2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
-            grid.y = Math.floor(i/2)*(gridSize*cellSize+padding)+gridSize*cellSize/2;
+            grid.x = (i % 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
+            grid.y = Math.floor(i / 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
             inGrid = true;
             break;
           }
         }
-        if (! inGrid) {
+        if (!inGrid) {
           grid.x = grid.defaultX;
           grid.y = grid.defaultY;
         }
         grid.inGrid = inGrid;
-      } else if (Math.abs(pointerX - grid.x) <= 0.5*gridSize*grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5*gridSize*grid.cellSize) {
+      } else if (Math.abs(pointerX - grid.x) <= 0.5 * gridSize * grid.cellSize && Math.abs(pointerY - grid.y) <= 0.5 * gridSize * grid.cellSize) {
         grid.isSelected = true;
       }
-    })
+    });
   });
+
 }
 
 onMounted(() => {
   setTimeout(init, 100);
   setInterval(drawGrid, 20);
+  inputNumberTS(); // Exécuter l'initialisation des événements
 });
 
 // Générer un tableau d'entiers de taille nbMonster
@@ -212,7 +228,6 @@ const checkChallenge = async () => {
   loading.value = true;
 
   try {
-    console.log(JSON.stringify({ tableauMonstres: tableauMonstres.value }))
     // Envoi de la requête avec le tableauMonstres
     const response = await fetch('http://localhost:3000/testChallenge', {
       method: 'POST',
@@ -223,7 +238,6 @@ const checkChallenge = async () => {
     });
 
     const result = await response.json();
-    console.log(result)
     // Mise à jour du statut en fonction de la réponse
     if (result.result.includes("True")) {
       // Afficher un indicateur vert
@@ -239,36 +253,42 @@ const checkChallenge = async () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", function () {
-  const monsterSections = document.querySelectorAll(".monster");
+function inputNumberTS() {
+  setTimeout(() => { // Ajout d'un délai pour s'assurer que le DOM est bien mis à jour
+    const monsterSections = document.querySelectorAll(".monster");
 
-  monsterSections.forEach((monster) => {
-    const input = monster.querySelector(".selectionMonsterNumber");
-    const decrement = monster.querySelector(".decrement");
-    const increment = monster.querySelector(".increment");
+    monsterSections.forEach((monster) => {
+      const input = monster.querySelector(".selectionMonsterNumber");
+      const decrement = monster.querySelector(".decrement");
+      const increment = monster.querySelector(".increment");
 
-    if (!input || !decrement || !increment) return;
+      if (!input || !decrement || !increment) return;
 
-    decrement.addEventListener("click", function () {
-      let value = parseInt(input.value) || 0;
-      if (input.min !== "" && value > parseInt(input.min)) {
-        input.value = value - 1;
-        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
-      }
+      decrement.onclick = () => {
+        let value = parseInt(input.value) || 0;
+        let minValue = input.min ? parseInt(input.min) : 0;
+        if (value > minValue) {
+          input.value = (value - 1).toString();
+          input.dispatchEvent(new Event("input")); // Met à jour Vue
+        }
+      };
+
+      increment.onclick = () => {
+        let value = parseInt(input.value) || 0;
+        let maxValue = input.max ? parseInt(input.max) : 30;
+        if (value < maxValue) {
+          input.value = (value + 1).toString();
+          input.dispatchEvent(new Event("input")); // Met à jour Vue
+        }
+      };
     });
+  }, 100); // Petite temporisation pour s'assurer que Vue a mis à jour le DOM
+}
 
-    increment.addEventListener("click", function () {
-      let value = parseInt(input.value) || 0;
-      if (input.max !== "" && value < parseInt(input.max)) {
-        input.value = value + 1;
-        input.dispatchEvent(new Event("input")); // Met à jour Vue v-model
-      }
-    });
-  });
-});
 
 
 generateMonsters(); // Initialisation du tableau
+
 </script>
 
 <template>
@@ -279,6 +299,11 @@ generateMonsters(); // Initialisation du tableau
     <span v-if="loading">Envoi en cours ⌛</span>
     <span v-else>Tester le défi</span>
   </button>
+  <button id='buttonClick2' @click="resetMap">
+    <span v-if="loading2">⏳</span>
+    <span v-else>Réinitialiser les masques et les lits</span>
+  </button>
+  <br>
 
   <section class="challengeSection">
     <div class="monster" v-for="(monster, index) in tableauMonstres" :key="index">
@@ -334,6 +359,15 @@ button span {
   display: inline-block;
   width:180px;
   text-align: center;
+}
+
+#buttonClick2{
+  color:white;
+}
+
+#buttonClick{
+  color:white;
+  margin-right:2em;
 }
 
 .inputNb {

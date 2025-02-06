@@ -237,26 +237,20 @@ const init = () => {
   });
 }
 
-onMounted(() => {
-  setTimeout(init, 100);
-  setInterval(drawGrid, 20);
-});
 
 
 
-
-
-document.addEventListener("DOMContentLoaded", function () {
+function inputNumberTS() {
   const monsterSections = document.querySelectorAll(".monster");
 
   monsterSections.forEach((monster) => {
     const input = monster.querySelector(".selectionMonsterNumber");
-    const decrement = monster.querySelector(".decrement");
-    const increment = monster.querySelector(".increment");
+    const decrementA = monster.querySelector(".decrementA");
+    const incrementA = monster.querySelector(".incrementA");
 
-    if (!input || !decrement || !increment) return;
+    if (!input || !decrementA || !incrementA) return;
 
-    decrement.addEventListener("click", function () {
+    decrementA.addEventListener("click", function () {
       let value = parseInt(input.value) || 0;
       if (input.min !== "" && value > parseInt(input.min)) {
         input.value = value - 1;
@@ -264,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
 
-    increment.addEventListener("click", function () {
+    incrementA.addEventListener("click", function () {
       let value = parseInt(input.value) || 0;
       if (input.max !== "" && value < parseInt(input.max)) {
         input.value = value + 1;
@@ -272,7 +266,17 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     });
   });
+}
+
+
+
+
+onMounted(() => {
+  setTimeout(init, 100);
+  setInterval(drawGrid, 20);
+  inputNumberTS();
 });
+
 
 </script>
 
@@ -280,7 +284,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <section class="challengeSection">
       <div class="monster" v-for="(_, index) in tableauMonstres" :key="index">
         <div class="inputNb">
-          <button class="decrement">-</button>
+          <button class="decrementA">-</button>
           <input class="selectionMonsterNumber"
                  type="number"
                  v-model="tableauMonstres[index]"
@@ -288,7 +292,7 @@ document.addEventListener("DOMContentLoaded", function () {
                  :max="30"
                  :step="1"
           />
-          <button class="increment">+</button>
+          <button class="incrementA">+</button>
         </div>
 
         <img class="imgMonster" :src="`/assets/img/monstres/monstres_${index + 1}.png`" alt="monstres monster"/>
@@ -369,7 +373,7 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.decrement, .increment, .selectionMonsterNumber {
+.decrementA, .incrementA, .selectionMonsterNumber {
   background: none;
   border: none;
   text-align: center;
