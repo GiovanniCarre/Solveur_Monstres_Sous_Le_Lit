@@ -260,6 +260,7 @@ const checkChallenge = async () => {
     } else {
       alert('Défi réalisable !');
       //si tu veux reshape Dorain : tableauSolutions.value = reshapeArray(result.result, 4, 10)
+      // JTM DORIAN (ps : c'est bilel)
       tableauSolutions.value = result.result
 
     }
