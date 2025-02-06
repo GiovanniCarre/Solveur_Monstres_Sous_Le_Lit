@@ -29,7 +29,7 @@ if __name__ == "__main__":
     monster_data = json.loads(sys.argv[1])
     nbCategoriesDeMonstres = 8
     nMasques = 4
-    nombreMontresObjectif = monster_data
+    nombreMonstresObjectif = monster_data
 
     masquesSelectionnes = VarArray(size=[4,9], dom=range(2))
     monstresVisibles = VarArray(size=[4,9], dom=range(nbCategoriesDeMonstres+1))
@@ -38,7 +38,7 @@ if __name__ == "__main__":
     satisfy(
         (monstresVisibles[i][j] == chambresVar[i][j]*masquesSelectionnes[i][j] for i in range(4) for j in range(9)),
         (Count(monstresVisibles, value=i+1) == monstresVisiblesCategorie[i] for i in range(nbCategoriesDeMonstres)),
-        (monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(nbCategoriesDeMonstres))
+        (monstresVisiblesCategorie[i] == nombreMonstresObjectif[i] for i in range(nbCategoriesDeMonstres))
     )
     solutions = []
     if solve(sols=1) is SAT and n_solutions():

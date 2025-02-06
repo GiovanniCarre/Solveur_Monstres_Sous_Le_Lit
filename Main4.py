@@ -80,7 +80,7 @@ if __name__ == "__main__":
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)
-    nombreMontresObjectif = [0, 0, 0, 2, 0, 0, 0, 3, 0]#3 singes et 2 yetis (essayer aussi [0, 1, 1, 0, 1, 1, 0, 1, 0])
+    nombreMonstresObjectif = [0, 0, 0, 2, 0, 0, 0, 3, 0]#3 singes et 2 yetis (essayer aussi [0, 1, 1, 0, 1, 1, 0, 1, 0])
 
     masquesVar = VarArray(size=[nMasques,10], dom=range(5))
     masquesSelectionnes = VarArray(size=[4,10], dom=range(5))
@@ -91,7 +91,7 @@ if __name__ == "__main__":
         (masquesSelectionnes[i] == masquesVar[selectionMasques[i]] for i in range(4)),
         (AllDifferent([masquesSelectionnes[i][9] for i in range(4)])),
         (monstresVisibles[i][j] == chambres[i][j]*masquesSelectionnes[i][j] for i in range(4) for j in range(9)),
-        (Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
+        (Count(monstresVisibles, value=i) == nombreMonstresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     )
 
     if solve(sols=ALL) is SAT and n_solutions():

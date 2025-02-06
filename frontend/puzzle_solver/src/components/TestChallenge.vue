@@ -208,6 +208,18 @@ const init = () => {
 
 }
 
+function reshapeArray(arr, rows, cols) {
+  if (arr.length !== rows * cols) {
+    throw new Error("Nombre d'éléments incompatible avec les dimensions demandées.");
+  }
+
+  let reshaped = [];
+  for (let i = 0; i < arr.length; i += cols) {
+    reshaped.push(arr.slice(i, i + cols));
+  }
+  return reshaped;
+}
+
 onMounted(() => {
   setTimeout(init, 100);
   setInterval(drawGrid, 20);
@@ -218,6 +230,7 @@ onMounted(() => {
 const nbMonster = 8;
 const tableauMonstres = ref<number[]>([]);
 
+
 const generateMonsters = () => {
   for (let i = 0; i < nbMonster; i++) {
     tableauMonstres.value.push(Math.floor(Math.random() * 2) * Math.floor(Math.random() * 4));
@@ -225,6 +238,8 @@ const generateMonsters = () => {
   tableauMonstres.value = [0, 0, 2, 0, 0, 0, 3, 0]
 };
 
+
+const tableauSolutions = ref<number[]>([]);
 // Fonction pour envoyer une requête au backend
 const checkChallenge = async () => {
   loading.value = true;
@@ -241,12 +256,15 @@ const checkChallenge = async () => {
 
     const result = await response.json();
     // Mise à jour du statut en fonction de la réponse
-    if (result.result.includes("True")) {
-      // Afficher un indicateur vert
-      alert('Défi réalisable !');
-    } else {
-      // Afficher un indicateur rouge
+    console.log(result)
+    if (result.result.includes("False")) {
       alert('Défi non réalisable.');
+    } else {
+      alert('Défi réalisable !');
+      //si tu veux reshape Dorain : tableauSolutions.value = reshapeArray(result.result, 4, 10)
+      // JTM DORIAN (ps : c'est bilel)
+      tableauSolutions.value = result.result
+
     }
   } catch (error) {
     console.error('Erreur lors de la vérification du défi:', error);

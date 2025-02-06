@@ -60,23 +60,23 @@ if __name__ == "__main__":
          ]
 
 
-    nombreMontresObjectif = [5,2,1,0,0]
+    nombreMonstresObjectif = [5,2,1,0,0]
     sommeNombreMonstres = 0
-    for i in nombreMontresObjectif:
+    for i in nombreMonstresObjectif:
         sommeNombreMonstres += i
     #nombre de cases vides dans notre objectif
-    nombreMontresObjectif[0] = countZeros(masquesOriginaux) + nombreMontresObjectif[0]
+    nombreMonstresObjectif[0] = countZeros(masquesOriginaux) + nombreMonstresObjectif[0]
 
 
-    nombreMontresObjectif[0] = nombreDeZero - sommeNombreMonstres
-    print("Nombre de cases vides: ",nombreMontresObjectif[0])
+    nombreMonstresObjectif[0] = nombreDeZero - sommeNombreMonstres
+    print("Nombre de cases vides: ",nombreMonstresObjectif[0])
     positionMasques = VarArray(size=4, dom=range(4))
     rotationMasques = VarArray(size=4, dom=range(4))
     masquesPlaces = VarArray(size=(4,3,3), dom=range(2))
     masquesPlacesTournes = VarArray(size=(4,3,3), dom=range(2))
 
     monstresVisibles = VarArray(size=[4,3,3], dom=range(1,nbCategoriesDeMonstres+1))
-    satisfy((Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(1,nbCategoriesDeMonstres+1)))
+    satisfy((Count(monstresVisibles, value=i) == nombreMonstresObjectif[i] for i in range(1,nbCategoriesDeMonstres+1)))
     satisfy(
         (masquesPlacesTournes[i] == rotate(masquesPlaces[i], rotationMasques[i]) for i in range(4)),
         (monstresVisibles[i][j][k] == chambres[i][j][k]*masquesPlacesTournes[i][j][k] for i in range(4) for j in range(3) for k in range(3)),

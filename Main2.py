@@ -65,15 +65,15 @@ def constructModel():
 
 
     #Donne le nombre de monstres ATTENTION LA 1ERE CASE EST UNE ABSENCE DE MONSTRE
-    nombreMontresObjectif = [0, 2, 1, 0, 0]
+    nombreMonstresObjectif = [0, 2, 1, 0, 0]
 
     sommeNombreMonstres = 0
-    for i in nombreMontresObjectif:
+    for i in nombreMonstresObjectif:
         sommeNombreMonstres += i
 
     #nombre de cases vides dans notre objectif
-    nombreMontresObjectif[0] = 4*3*3 - countZeros(masquesOriginaux) - sommeNombreMonstres
-    print("Objectif: ", nombreMontresObjectif)
+    nombreMonstresObjectif[0] = 4*3*3 - countZeros(masquesOriginaux) - sommeNombreMonstres
+    print("Objectif: ", nombreMonstresObjectif)
 
 
     #========================== Variables de la solution =====================================================
@@ -87,17 +87,17 @@ def constructModel():
     #======================= Contraintes =======================
     #Correspond aux monstres ce qu'on voit
     monstresVisibles = VarArray(size=[4,3,3], dom=range(nbCategoriesDeMonstres+1))
-    #print(monstresComptesSurLaCarte[0], " - ", nombreMontresObjectif[0])
+    #print(monstresComptesSurLaCarte[0], " - ", nombreMonstresObjectif[0])
 
     masquesPlacesTournes = VarArray(size=(4,3,3), dom=range(2))
-    print("Nombre de cases vides: ", nombreMontresObjectif[0])
+    print("Nombre de cases vides: ", nombreMonstresObjectif[0])
 
     #La position des masques doivent être différentes
     satisfy(
         (monstresVisibles[i][j][k] == chambres[i][j][k] * masquesPlacesTournes[i][j][k] for i in range(4) for j in
          range(3) for k in range(3)),
         #Objectif des monstres doivent être bons
-        *[Count(monstresVisibles, value=i) == nombreMontresObjectif[i] for i in range(nbCategoriesDeMonstres+1)],
+        *[Count(monstresVisibles, value=i) == nombreMonstresObjectif[i] for i in range(nbCategoriesDeMonstres+1)],
         #Position des masques différents
         AllDifferent(positionMasques)
     )

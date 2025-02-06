@@ -79,11 +79,11 @@ def compterDefis(defis) :
     return comptage
 
 if __name__ == "__main__":
-    nbCategoriesDeMonstres = 7
+    nbCategoriesDeMonstres = 8
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)
-    nombreMontresObjectif = [0, 0, 0, 2, 0, 0, 0, 3, 0]#3 singes et 2 yetis (essayer aussi [0, 1, 1, 0, 1, 1, 0, 1, 0])
+    nombreMonstresObjectif = [0, 0, 0, 2, 0, 0, 0, 3, 0]#3 singes et 2 yetis (essayer aussi [0, 1, 1, 0, 1, 1, 0, 1, 0])
 
     masquesVar = VarArray(size=[nMasques,10], dom=range(5))
     masquesSelectionnes = VarArray(size=[4,10], dom=range(5))
@@ -114,7 +114,7 @@ if __name__ == "__main__":
                 defi.append(value(monstresVisiblesCategorie[i], sol=k))
             defis.append(defi)
 
-    satisfy(monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
+    #satisfy(monstresVisiblesCategorie[i] == nombreMonstresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     nonRealisables = 0
     nbMax = 15
     defisRealisable = []
@@ -129,7 +129,7 @@ if __name__ == "__main__":
         else :
             nonRealisables += 1
             #afficherDefi(defis[i])
-            #afficherSolution(solution)*
+            #afficherSolution(solution)
 
     print("[")
     for i in range(len(defisRealisable)):

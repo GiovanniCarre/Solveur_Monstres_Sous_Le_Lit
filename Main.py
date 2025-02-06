@@ -56,14 +56,14 @@ def constructModel():
 
     nombreDeZero = countZeros(masquesOriginaux)
     #Donne le nombre de monstres ATTENTION LA 1ERE CASE EST UNE ABSENCE DE MONSTRE
-    nombreMontresObjectif = [0,2,1,0,0]
+    nombreMonstresObjectif = [0,2,1,0,0]
 
     sommeNombreMonstres = 0
-    for i in nombreMontresObjectif:
+    for i in nombreMonstresObjectif:
         sommeNombreMonstres += i
 
     #nombre de cases vides dans notre objectif
-    nombreMontresObjectif[0] = nombreDeZero - sommeNombreMonstres
+    nombreMonstresObjectif[0] = nombreDeZero - sommeNombreMonstres
 
 
 
@@ -86,11 +86,11 @@ def constructModel():
     #Correspond aux monstres ce qu'on voit
     monstresVisibles = VarArray(size=[4,3,3], dom=range(nbCategoriesDeMonstres+1))
     monstresComptesSurLaCarte = VarArray(size=[nbCategoriesDeMonstres+1])
-    #print(monstresComptesSurLaCarte[0], " - ", nombreMontresObjectif[0])
+    #print(monstresComptesSurLaCarte[0], " - ", nombreMonstresObjectif[0])
 
     #La position des masques doivent être différentes
     satisfy(
-        #Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMontresObjectif[0]*
+        #Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMonstresObjectif[0]*
         AllDifferent(positionMasques)
     )
 
