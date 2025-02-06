@@ -58,6 +58,7 @@ app.post('/generateChallenge', (req, res) => {
         }
         // Le script Python renvoie un JSON ou un texte que l'on parse
         try {
+            console.log(stdout)
             const result = JSON.parse(stdout);
             res.json(result);
         } catch (e) {
@@ -111,8 +112,9 @@ app.post('/generateMap', (req, res) => {
             return res.status(500).json({ error: stderr });
         }
         try {
-
+            console.log(stdout)
             res.json({ result: stdout });
+
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', stdout);
             res.status(500).json({ error: 'Erreur lors du parsing du JSON' });
