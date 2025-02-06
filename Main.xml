@@ -5,6 +5,6 @@
     <array id="monstresVisibles" note="======================= Contraintes ======================= - Correspond aux monstres ce qu'on voit" size="[4][3][3]"> 0..4 </array>
   </variables>
   <constraints>
-    <allDifferent note="Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMontresObjectif[0]*"> positionMasques[] </allDifferent>
+    <allDifferent note="Ici il faut vérifierque que monstresComptesSurLaCarte[0] == nombreMonstresObjectif[0]*"> positionMasques[] </allDifferent>
   </constraints>
 </instance>

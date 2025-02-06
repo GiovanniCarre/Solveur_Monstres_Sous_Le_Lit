@@ -58,14 +58,6 @@ def afficherDefi(defi) :
         description += str(defi[i])+", "
     print(description[:-2])
 
-def defiRealisable(defi):
-    unpost()
-    satisfy(monstresVisiblesCategorie[i] == defi[i] for i in range(1, nbCategoriesDeMonstres + 1))
-    if solve(sols=ALL) is SAT :
-        return (n_solutions() == 1)
-    return False
-
-
 if __name__ == "__main__":
     monster_data = json.loads(sys.argv[1])
 
@@ -74,7 +66,7 @@ if __name__ == "__main__":
     chambres = creerChambres()
     masques = crerMasques()
     nMasques = len(masques)
-    nombreMontresObjectif = [0]+monster_data
+    nombreMonstresObjectif = [0]+monster_data
     masquesVar = VarArray(size=[nMasques,10], dom=range(5))
     masquesSelectionnes = VarArray(size=[4,10], dom=range(5))
     selectionMasques = VarArray(size=4, dom=range(nMasques))
@@ -85,26 +77,7 @@ if __name__ == "__main__":
         (masquesSelectionnes[i] == masquesVar[selectionMasques[i]] for i in range(4)),
         (AllDifferent([masquesSelectionnes[i][9] for i in range(4)])),
         (monstresVisibles[i][j] == chambres[i][j]*masquesSelectionnes[i][j] for i in range(4) for j in range(9)),
-        (Count(monstresVisibles, value=i) == monstresVisiblesCategorie[i] for i in range(1, nbCategoriesDeMonstres + 1))
+        (Count(monstresVisibles, value=i) == monstresVisiblesCategorie[i] for i in range(1, nbCategoriesDeMonstres + 1)),
+        (monstresVisiblesCategorie[i] == nombreMonstresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     )
-    solutions = []
-    defis = []
-    solutions = []
-    if solve(sols=ALL) is SAT and n_solutions():
-        #print("SAT avec ", n_solutions(), " solutions")
-        for k in range(n_solutions()):
-            solution = []
-            for i in range(4):
-                chambre = []
-                for j in range(10):
-                    chambre.append(value(masquesSelectionnes[i][j], sol=k))
-                solution.append(chambre)
-            solutions.append(solution)
-            defi = []
-            for i in range(nbCategoriesDeMonstres+1) :
-                defi.append(value(monstresVisiblesCategorie[i], sol=k))
-            defis.append(defi)
-
-    satisfy(monstresVisiblesCategorie[i] == nombreMontresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
-
-    print(solve(sols=ALL) is SAT)
+    print(solve() is SAT)
