@@ -206,6 +206,18 @@ const init = () => {
 
 }
 
+function reshapeArray(arr, rows, cols) {
+  if (arr.length !== rows * cols) {
+    throw new Error("Nombre d'éléments incompatible avec les dimensions demandées.");
+  }
+
+  let reshaped = [];
+  for (let i = 0; i < arr.length; i += cols) {
+    reshaped.push(arr.slice(i, i + cols));
+  }
+  return reshaped;
+}
+
 onMounted(() => {
   setTimeout(init, 100);
   setInterval(drawGrid, 20);
@@ -247,6 +259,7 @@ const checkChallenge = async () => {
       alert('Défi non réalisable.');
     } else {
       alert('Défi réalisable !');
+      //si tu veux reshape Dorain : tableauSolutions.value = reshapeArray(result.result, 4, 10)
       tableauSolutions.value = result.result
 
     }
