@@ -64,6 +64,7 @@ var valeurMasques = ref<boolean[][][]>([
   [[false, false, false], [false, true, true], [false, false, false]],
   [[true, false, false], [false, false, false], [false, false, true]]
 ]);
+
 onMounted(async () => {
   const response = await fetch('http://localhost:3000/masquesFixes');
   const resultTab = await response.json();
@@ -74,6 +75,7 @@ onMounted(async () => {
       )
   );
 });
+
 var pointerX = 0;
 var pointerY = 0;
 
@@ -287,7 +289,29 @@ function inputNumberTS() {
 
 
 
+function placerMasques(position: number[], nouveauxMasques: boolean[][][]): void {
+  if (position.length !== 4 || rotation.length !== 4) {
+    throw new Error("Both arrays must have exactly 4 elements.");
+  }
+
+  if (!position.every(num => num >= 0 && num <= 3) || !rotation.every(num => num >= 0 && num <= 3)) {
+    throw new Error("All values must be between 0 and 3.");
+  }
+
+  smallGrids.forEach((grid, index) => {
+        grid.x = (position[index] % 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
+        grid.y = Math.floor(position[index] / 2) * (gridSize * cellSize + padding) + gridSize * cellSize / 2;
+
+        grid.inGrid = true;
+  });
+
+  nouveauxMasques //
+}
+
+
+
 generateMonsters(); // Initialisation du tableau
+//placerMasques([0, 1, 2, 3], [0, 0, 0, 0]);
 
 </script>
 
