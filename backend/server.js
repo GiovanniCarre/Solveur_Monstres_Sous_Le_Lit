@@ -85,6 +85,8 @@ app.post('/testChallenge', (req, res) => {
             return res.status(500).json({ error: stderr });
         }
         try {
+            stdout = stdout.replace(/\n/g, "")
+            console.log(stdout)
             res.json({ result: stdout });
         } catch (e) {
             console.error('Erreur lors du parsing JSON:', stdout);

@@ -80,4 +80,16 @@ if __name__ == "__main__":
         (Count(monstresVisibles, value=i) == monstresVisiblesCategorie[i] for i in range(1, nbCategoriesDeMonstres + 1)),
         (monstresVisiblesCategorie[i] == nombreMonstresObjectif[i] for i in range(1, nbCategoriesDeMonstres + 1))
     )
-    print(solve() is SAT)
+    result = (solve() is SAT)
+    if result:
+        print("[")
+        for i in range(4):
+            for j in range(10) :
+                print(value(masquesSelectionnes[i][j]))
+                if i == len(selectionMasques)-1 and j == 9:
+                    continue
+                else:
+                    print(",")
+        print("]")
+    else:
+        print("False")

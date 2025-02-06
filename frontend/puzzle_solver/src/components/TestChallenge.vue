@@ -216,6 +216,7 @@ onMounted(() => {
 const nbMonster = 8;
 const tableauMonstres = ref<number[]>([]);
 
+
 const generateMonsters = () => {
   for (let i = 0; i < nbMonster; i++) {
     tableauMonstres.value.push(Math.floor(Math.random() * 2) * Math.floor(Math.random() * 4));
@@ -223,6 +224,8 @@ const generateMonsters = () => {
   tableauMonstres.value = [0, 0, 2, 0, 0, 0, 3, 0]
 };
 
+
+const tableauSolutions = ref<number[]>([]);
 // Fonction pour envoyer une requête au backend
 const checkChallenge = async () => {
   loading.value = true;
@@ -239,12 +242,13 @@ const checkChallenge = async () => {
 
     const result = await response.json();
     // Mise à jour du statut en fonction de la réponse
-    if (result.result.includes("True")) {
-      // Afficher un indicateur vert
-      alert('Défi réalisable !');
-    } else {
-      // Afficher un indicateur rouge
+    console.log(result)
+    if (result.result.includes("False")) {
       alert('Défi non réalisable.');
+    } else {
+      alert('Défi réalisable !');
+      tableauSolutions.value = result.result
+
     }
   } catch (error) {
     console.error('Erreur lors de la vérification du défi:', error);
