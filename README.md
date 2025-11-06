@@ -26,18 +26,29 @@ Les modèles PyCSP3 sont situés dans backend/scriptPySCP3
    ```bash
    git clone https://github.com/ton_utilisateur/Solveur_Monstres_Sous_Le_Lit.git
    cd Solveur_Monstres_Sous_Le_Lit
+   ```
 
 2. **Cloner les dépendances**
-  npm install -g @vue/cli --verbose
-  npm install
+   ```bash
+   npm install -g @vue/cli --verbose
+   npm install
+   ```
 
-3. **Configurer votre environnement Python** (ici dans notre environnement Jupyter notebook)
-  python -m venv ~/solveur_env
-  source ~/solveur_env/bin/activate
-  pip install pycsp3
+4. **Configurer votre environnement Python** (ici dans notre environnement Jupyter notebook)
+   ```bash
+   python -m venv ~/solveur_env
+   source ~/solveur_env/bin/activate
+   pip install pycsp3
+   ```
 
-4. Enfin, lancez les commandes suivantes dans deux terminaux séparés:
-  ./launchBackend.sh
-  ./launchFrontend.sh
+5. Enfin, lancez les commandes suivantes dans deux terminaux séparés:
+   ```bash
+   ./launchBackend.sh
+   ./launchFrontend.sh
+   ```
 
-5. Allez sur  http://localhost:8080 avec votre navigateur
+6. Allez sur  http://localhost:8080 avec votre navigateur
+
+
+
+Illustrations du projet disponible dans screenshots/
