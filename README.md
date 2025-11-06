@@ -1,6 +1,6 @@
 # Solveur Monstres Sous Le Lit
 
-![Interface du jeu](interface.png)
+<img src="screenshots/interface.png" alt="Interface du jeu" width="400"/>
 
 Ce projet est une application web interactive qui permet de jouer au puzzle *Monstres Sous Le Lit*, de générer de nouveaux défis, et de les résoudre automatiquement grâce à des modèles de contraintes écrits en **PyCSP3**. Le projet combine un frontend en **Vue.js** et un backend en **Python** pour la logique de résolution et de génération.
 
