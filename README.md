@@ -6,19 +6,22 @@ Ce projet est une application web interactive qui permet de jouer au puzzle *Mon
 
 ---
 
-## À propos du jeu *Monstres Sous Le Lit*
+## À propos
 
-*Monstres Sous Le Lit* est un puzzle logique où le joueur doit placer des monstres sous un lit en respectant des contraintes visuelles et numériques. Chaque niveau propose un défi unique, et ce projet permet de:
+*Monstres Sous Le Lit* est un puzzle logique où le joueur doit placer des monstres sous des objets en respectant des contraintes (forme des objets et nombre de monstres visibles de chaque type).
+Chaque niveau est unique.
+Ce projet permet de:
 - **Jouer** à des puzzles existants.
 - **Générer** de nouveaux puzzles aléatoires.
 - **Résoudre** automatiquement les puzzles grâce à des algorithmes de satisfaction de contraintes.
 
 Si vous souhaitez jouer au jeu réel, vous pouvez l'acheter à l'adresse suivante:
+<br>
 https://www.smartgames.eu/fr/jeux-pour-1-joueur/monstres-sous-le-lit
 
 ---
 
-Les modèles PyCSP3 sont situés dans backend/scriptPySCP3
+Les modèles du solveur PyCSP3 sont situés dans backend/scriptPySCP3
 
 ## Installation
 
