@@ -1,21 +1,43 @@
-# Solveur_Monstres_Sous_Le_Lit
+# Solveur Monstres Sous Le Lit
 
-Les modèles PyCSP3 sont dans backend/scriptPySCP3
+![Interface du jeu](interface.png)
 
-#Installation
+Ce projet est une application web interactive qui permet de jouer au puzzle *Monstres Sous Le Lit*, de générer de nouveaux défis, et de les résoudre automatiquement grâce à des modèles de contraintes écrits en **PyCSP3**. Le projet combine un frontend en **Vue.js** et un backend en **Python** pour la logique de résolution et de génération.
 
-npm install -g @vue/cli --verbose
+---
 
+## À propos du jeu *Monstres Sous Le Lit*
 
+*Monstres Sous Le Lit* est un puzzle logique où le joueur doit placer des monstres sous un lit en respectant des contraintes visuelles et numériques. Chaque niveau propose un défi unique, et ce projet permet de:
+- **Jouer** à des puzzles existants.
+- **Générer** de nouveaux puzzles aléatoires.
+- **Résoudre** automatiquement les puzzles grâce à des algorithmes de satisfaction de contraintes.
 
-npm run dev
+Si vous souhaitez jouer au jeu réel, vous pouvez l'acheter à l'adresse suivante:
+https://www.smartgames.eu/fr/jeux-pour-1-joueur/monstres-sous-le-lit
 
+---
 
-Il faut avoir un environnement virtuel python dans ~/jupyter_env/bin/activate
+Les modèles PyCSP3 sont situés dans backend/scriptPySCP3
 
-source ~/jupyter_env/bin/activate
+## Installation
 
-pip install pycsp3
+1. **Cloner le dépôt**
+   ```bash
+   git clone https://github.com/ton_utilisateur/Solveur_Monstres_Sous_Le_Lit.git
+   cd Solveur_Monstres_Sous_Le_Lit
 
-Lancer avec les fichiers bash : launchFrontend.sh & launchBackend.sh
+2. **Cloner les dépendances**
+  npm install -g @vue/cli --verbose
+  npm install
 
+3. **Configurer votre environnement Python** (ici dans notre environnement Jupyter notebook)
+  python -m venv ~/solveur_env
+  source ~/solveur_env/bin/activate
+  pip install pycsp3
+
+4. Enfin, lancez les commandes suivantes dans deux terminaux séparés:
+  ./launchBackend.sh
+  ./launchFrontend.sh
+
+5. Allez sur  http://localhost:8080 avec votre navigateur
